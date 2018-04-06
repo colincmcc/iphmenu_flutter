@@ -1,0 +1,22 @@
+{
+  "title": "IPH Premium",
+  "@title": {
+    "description": "Title for the Menu application",
+    "type": "text",
+    "placeholders": {}
+  },
+
+  "Bourbon": "BOURBON",
+  "@bourbon": {
+    "description": "Label for the Bourbon tab",
+    "type": "text",
+    "placeholders": {}
+  },
+
+  "whisky": "WHISKY",
+  "@whisky": {
+    "description": "Label for the Whisky tab",
+    "type": "text",
+    "placeholders": {}
+  }
+}
