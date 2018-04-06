@@ -41,10 +41,11 @@ class GradientAppBar extends StatelessWidget {
             fontSize: 36.0
           )
         ),
+          new Container(width: 20.0),
           new Image(
-            image: new AssetImage("assets/img/lightbulb_only.png"),
-            height: 10.0,
-            width: 10.0,
+            image: new AssetImage("assets/img/lightbulb_solo.png"),
+            height: 30.0,
+            width:30.0,
           ),
         ]
       ),
