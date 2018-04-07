@@ -9,10 +9,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new PreferredSize(child: new GradientAppBar("IPH EXECUTIVE"), preferredSize: const Size.fromHeight(48.0)),
-      body: new Column(
-        children: <Widget>[
-          new HomePageTabbed(),
-        ],
+      body: new Container(
+        child:  new HomePageTabbed(),
+
       ),
     );
   }
@@ -55,13 +54,13 @@ class _HomePageTabbedState extends State<HomePageTabbed> with SingleTickerProvid
           controller: _tabController,
           children: [
 
-            new Row(
+            new Column(
               children: <Widget>[
                 new HomePageBody()
               ],
             ),
-            new Row(),
-            new Container(),
+            new Column(),
+            new Column(),
           ]
       ),
     );
