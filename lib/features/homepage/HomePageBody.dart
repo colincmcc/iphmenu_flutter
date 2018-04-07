@@ -9,7 +9,18 @@ class HomePageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Expanded(
       child: new Container(
-        color: Theme.Colors.liquorPageBackground,
+        decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+                colors: [
+                  Theme.Colors.appBarGradientStart,
+                  Theme.Colors.appBarGradientEnd,
+                ],
+                begin: const FractionalOffset(0.0, 0.0),
+                end: const FractionalOffset(1.0, 0.0),
+                stops: [0.0, 1.0],
+                tileMode: TileMode.clamp
+            )
+        ),
         child: new CustomScrollView(
           scrollDirection: Axis.vertical,
           shrinkWrap: false,
