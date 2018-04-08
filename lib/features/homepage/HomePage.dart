@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iphmenu/features/homepage/LiquorList.dart';
 import 'package:iphmenu/features/homepage/gradientappbar.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
+import 'package:iphmenu/features/homepage/HomePageBody.dart';
+
 class HomePage extends StatelessWidget {
 
   @override
@@ -17,7 +19,7 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
+/*
 class HomePageBody extends StatefulWidget {
 
   _HomePageBodyState createState() => new _HomePageBodyState();
@@ -60,12 +62,12 @@ class _HomePageBodyState extends State<HomePageBody> with SingleTickerProviderSt
           ]
       ),
     );
+    */
 /*
     return new Column(
       children: <Widget>[
         new LiquorList(),
       ],
     );
-  */
-  }
-}
+
+*/
