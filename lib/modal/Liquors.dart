@@ -1,4 +1,4 @@
-import 'package:iphmenu/models/LiquorItem.dart';
+import 'package:iphmenu/modal/LiquorItem.dart';
 
 class LiquorDao {
 

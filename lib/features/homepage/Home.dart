@@ -69,18 +69,14 @@ class _HomePageTabbedState extends State<HomePageTabbed> with SingleTickerProvid
 /*
 class HomePageTabbed extends StatefulWidget{
   HomePageTabbed createState() => new _HomePageTabbedState();
-
 }
 class _HomePageTabbedState extends State<HomePageTabbed> with SingleTickerProviderStateMixin{
-
   TabController _tabController;
-
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: 3);
   }
-
   @override
   void dispose() {
     _tabController.dispose();
@@ -88,7 +84,6 @@ class _HomePageTabbedState extends State<HomePageTabbed> with SingleTickerProvid
   }
   @override
   Widget build(BuildContext context) {
-
     return new Scaffold(
       backgroundColor: Theme.Colors.liquorPageBackground,
       appBar: new TabBar(
@@ -102,7 +97,6 @@ class _HomePageTabbedState extends State<HomePageTabbed> with SingleTickerProvid
       body: new TabBarView(
           controller: _tabController,
           children: [
-
             new LiquorList(),
             new Container(),
             new Container(),
@@ -111,5 +105,4 @@ class _HomePageTabbedState extends State<HomePageTabbed> with SingleTickerProvid
     );
   }
 }
-
 */

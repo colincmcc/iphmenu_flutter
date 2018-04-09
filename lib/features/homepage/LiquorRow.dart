@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:iphmenu/models/LiquorItem.dart';
+import 'package:iphmenu/modal/LiquorItem.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
 import 'package:iphmenu/Routes.dart';
 
