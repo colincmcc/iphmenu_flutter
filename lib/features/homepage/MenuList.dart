@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iphmenu/features/homepage/HomePageBody.dart';
+import 'package:iphmenu/features/liquor/LiquorListBody.dart';
 import 'package:iphmenu/modal/MenuModal.dart';
 
 class MenuList extends StatelessWidget{
@@ -38,12 +38,14 @@ class MenuListItem extends StatelessWidget {
         leading: new CircleAvatar(child: new Image.asset(_menuModal.imgLink)),
         title: new Text(_menuModal.menuName),
         onTap:(){
-          Widget build(BuildContext context) {
-            return new Container(
-              child: new HomePageBody(),
-            );
-          }
+          Navigator.push(
+            context,
+            new MaterialPageRoute(builder: (context) => new LiquorListBody())
+          );
         }
     );
+    
+    
   }
+  
 }

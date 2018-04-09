@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iphmenu/features/homepage/HomePageBody.dart';
+import 'package:iphmenu/features/liquor/LiquorListBody.dart';
 import 'package:iphmenu/features/homepage/gradientappbar.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
 
@@ -53,12 +53,7 @@ class _HomePageTabbedState extends State<HomePageTabbed> with SingleTickerProvid
       body: new TabBarView(
           controller: _tabController,
           children: [
-
-            new Column(
-              children: <Widget>[
-                new HomePageBody()
-              ],
-            ),
+            new LiquorListBody(),
             new Column(),
             new Column(),
           ]

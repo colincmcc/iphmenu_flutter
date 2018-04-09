@@ -38,8 +38,10 @@ class _HomePageBodyState extends State<HomePageBody> {
     ];
   }
   Widget build(BuildContext context) {
-    return new Container(
-      child: new MenuList(_buildMenuList()),
+    return new Scaffold(
+      body: new Container(
+        child: new MenuList(_buildMenuList()),
+      ),
     );
   }
 }
