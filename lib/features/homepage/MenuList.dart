@@ -1,10 +1,11 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:iphmenu/features/liquor/LiquorListBody.dart';
 import 'package:iphmenu/modal/MenuModal.dart';
 
 class MenuList extends StatelessWidget{
 
-  final List<MenuModal> _menuModal;
+  final List<LiquorType> _menuModal;
 
   MenuList(this._menuModal);
 
@@ -28,7 +29,7 @@ class MenuList extends StatelessWidget{
 
 class MenuListItem extends StatelessWidget {
 
-  final MenuModal _menuModal;
+  final LiquorType _menuModal;
 
   MenuListItem(this._menuModal);
 
@@ -48,4 +49,5 @@ class MenuListItem extends StatelessWidget {
     
   }
   
-}
+
+*/

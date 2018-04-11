@@ -3,10 +3,11 @@ import 'package:iphmenu/Theme.dart' as Theme;
 class GradientAppBar extends StatelessWidget {
   final String title;
   final double barHeight = 66.0;
+  final bool hasStack;
 
 
-
-  GradientAppBar(this.title);
+  GradientAppBar(this.title, {this.hasStack =false});
+  GradientAppBar.back(this.title) : this.hasStack = true;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,11 @@ class GradientAppBar extends StatelessWidget {
 
       child: new Row(
         children: <Widget>[
+        new Container(
+          child: new BackButton(
+              color: Theme.Colors.liquorTitle
+          )
+        ),
         new Text(
           title,
           style: const TextStyle(

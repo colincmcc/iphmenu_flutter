@@ -78,6 +78,13 @@ class TextStyles {
       fontWeight: FontWeight.w300,
       fontSize: 14.0
   );
+  static const TextStyle liquorMenu = const TextStyle(
+      color: Colors.appBarTitle,
+      fontFamily: 'Typewriter',
+      fontSize: 48.0,
+      fontWeight: FontWeight.w900,
+      letterSpacing: 1.0
+  );
 
 
 
