@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:iphmenu/features/common/LiquorSummary.dart';
+import 'package:iphmenu/features/liquor/LiquorSummary.dart';
 import 'package:iphmenu/modal/LiquorItem.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
-import 'package:iphmenu/features/common/gradientappbar.dart';
+import 'package:iphmenu/features/common/AppBars.dart';
 
 class LiquorListBody extends StatelessWidget {
-
-  String liquorType = "Bourbon";
+  LiquorListBody(this.liquorType);
+  final String liquorType;
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new PreferredSize(child: new GradientAppBar("IPH EXECUTIVE"), preferredSize: const Size.fromHeight(48.0)),
+      appBar: new PreferredSize(child: new GradientAppBar(liquorType), preferredSize: const Size.fromHeight(48.0)),
       body: new Column(
         children: <Widget>[
           _liquorContent
@@ -21,7 +21,9 @@ class LiquorListBody extends StatelessWidget {
 
   }
 
-  Expanded _liquorContent =  new Expanded(
+
+
+  final Expanded _liquorContent =  new Expanded(
     child: new Container(
       decoration: new BoxDecoration(
           gradient: new LinearGradient(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:iphmenu/features/detail/LiquorDetailAppbar.dart';
-import 'package:iphmenu/features/detail/LiquorDetailBody.dart';
+import 'package:iphmenu/features/liquorDetail/LiquorDetailAppbar.dart';
+import 'package:iphmenu/features/liquorDetail/LiquorDetailBody.dart';
 import 'package:iphmenu/modal/LiquorItem.dart';
 import 'package:iphmenu/modal/Liquors.dart';
 

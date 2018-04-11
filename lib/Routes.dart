@@ -1,6 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'features/detail/LiquorDetail.dart';
+import 'features/liquorDetail/LiquorDetail.dart';
 import 'features/liquor/LiquorListBody.dart';
 
 
