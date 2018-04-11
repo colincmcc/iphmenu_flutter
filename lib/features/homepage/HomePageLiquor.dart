@@ -33,11 +33,12 @@ class HomePageLiquorState extends State<HomePageLiquor>{
 
   Widget build(BuildContext context) {
     Widget home = new Scaffold(
+      backgroundColor: Theme.Colors.appBarGradientStart,
       key: _scaffoldKey,
       body: new CustomScrollView(
         slivers: <Widget>[
-          new AnimatedAppBar(context, "IPH Executive"),
-          new HomePageItem()
+          new AnimatedAppBar(context, "IPH EXECUTIVE"),
+          _getHomeContent()
         ]
       ),
     );
@@ -54,44 +55,26 @@ class HomePageLiquorState extends State<HomePageLiquor>{
 
   }
 }
-_getHomeContent(){
-
-  return new Expanded(
-    child: new Container(
-      decoration: new BoxDecoration(
-          gradient: new LinearGradient(
-              colors: [
-                Theme.Colors.appBarGradientStart,
-                Theme.Colors.appBarGradientEnd,
-              ],
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(0.0, 1.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp)),
-      child: new CustomScrollView(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: false,
-        slivers: <Widget>[
-          new SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0),
-            sliver: new SliverList(
-              delegate: new SliverChildBuilderDelegate(
-                    (context, index) => new HomePageItem(kAllLiquorTypeItems[index]),
-                childCount: kAllLiquorTypeItems.length,
-              ),
-            ),
-          ),
-        ],
+_getHomeContent() {
+  return new Container(
+    child: new SliverPadding(
+      padding: const EdgeInsets.symmetric(vertical: 24.0),
+      sliver: new SliverList(
+        delegate: new SliverChildBuilderDelegate(
+              (context, index) => new HomePageItem(kAllLiquorTypeItems[index]),
+          childCount: kAllLiquorTypeItems.length,
+        ),
       ),
-    ),
+    )
   );
+
 }
 
 class HomePageItem extends StatelessWidget {
   final LiquorType liquorType;
   final bool horizontal;
 
-  HomePageItem(this.liquorType);
+  HomePageItem(this.liquorType, {this.horizontal = true} );
 
 
 
@@ -133,9 +116,9 @@ class HomePageItem extends StatelessWidget {
       margin: new EdgeInsets.fromLTRB(horizontal ? 76.0 : 16.0, horizontal ? 16.0 : 42.0, 16.0, 16.0),
       constraints: new BoxConstraints.expand(),
       child: new Column(
-        crossAxisAlignment: horizontal ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: horizontal ? CrossAxisAlignment.center : CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Container(height: 4.0),
           new Text(liquorType.title, style: Theme.TextStyles.liquorTitle),
         ],
       ),
@@ -144,12 +127,12 @@ class HomePageItem extends StatelessWidget {
 
     final homeContent = new Container(
       child: homeCardContent,
-      height: horizontal ? 175.0 : 200.0,
+      height: horizontal ? 75.0 : 200.0,
       margin: horizontal
           ? new EdgeInsets.only(left: 46.0)
-          : new EdgeInsets.only(top: 72.0),
+          : new EdgeInsets.only(top: 10.0),
       decoration: new BoxDecoration(
-        color: Theme.Colors.liquorCard,
+        color: Theme.Colors.appBarGradientEnd,
         shape: BoxShape.rectangle,
         borderRadius: new BorderRadius.circular(8.0),
         boxShadow: <BoxShadow>[
@@ -174,12 +157,13 @@ class HomePageItem extends StatelessWidget {
         )
             : null,
         child: new Container(
+
           margin: const EdgeInsets.symmetric(
-            vertical: 16.0,
-            horizontal: 24.0,
+            horizontal: 16.0,
           ),
           child: new Stack(
             children: <Widget>[
+              homeThumbnail,
               homeContent
             ],
           ),

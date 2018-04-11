@@ -80,6 +80,7 @@ class AnimatedAppBar extends StatelessWidget{
         .padding
         .top;
     return new SliverAppBar(
+      backgroundColor: Theme.Colors.appBarGradientEnd,
       pinned: true,
       expandedHeight: _kAppBarHeight,
       flexibleSpace: new LayoutBuilder(
@@ -113,14 +114,17 @@ class PageLogo extends StatefulWidget{
   final String pageTitle;
 
   @override
-  _PageLogoState createState() => new _PageLogoState();
+  _PageLogoState createState() => new _PageLogoState(pageTitle);
 }
 
 class _PageLogoState extends State<PageLogo> {
   static const double kLogoHeight = 190.0;
-  static const double kLogoWidth = 250.0;
-  static const double kImageHeight = 108.0;
-  static const double kTextHeight = 72.0;
+  static const double kLogoWidth = 300.0;
+  static const double kImageHeight = 120.0;
+  static const double kTextHeight = 80.0;
+  _PageLogoState(this.pageTitle);
+
+  final String pageTitle;
 
   final RectTween _textRectTween = new RectTween(
       begin: new Rect.fromLTWH(0.0, kLogoHeight, kLogoWidth, kTextHeight),
@@ -155,7 +159,7 @@ class _PageLogoState extends State<PageLogo> {
               child: new Opacity(
                 opacity: _textOpacity.transform(widget.t),
                 child: new Text(
-                    "IPH Executive", style: Theme.TextStyles.liquorMenu,
+                    pageTitle, style: Theme.TextStyles.liquorMenu,
                     textAlign: TextAlign.center),
               ),
             ),
