@@ -43,13 +43,13 @@ List<LiquorItem> liquoritems = [
   ),
   const LiquorItem(
     id: "2",
-    type: "Bourbon",
+    type: "Tequila",
     distillery: "Beam Suntory",
     name: "Knob Creek 25th Anniversary",
     price: r"$21",
     proof: "Proof: 122.1",
     age: "13 Years",
-    style: "Bourbon",
+    style: "Tequila",
     bill: "75% Corn, 13% Rye, 12% Malted Barley",
     color: "Deep Amber",
     weblink: "http://www.breakingbourbon.com/knob-creek-25th-anniversary.html",
@@ -60,13 +60,13 @@ List<LiquorItem> liquoritems = [
   ),
   const LiquorItem(
     id: "3",
-    type: "Bourbon",
+    type: "Rum",
     distillery: "Beam Suntory",
     name: "Knob Creek 25th Anniversary",
     price: r"$21",
     proof: "Proof: 122.1",
     age: "13 Years",
-    style: "Bourbon",
+    style: "Rum",
     bill: "75% Corn, 13% Rye, 12% Malted Barley",
     color: "Deep Amber",
     weblink: "http://www.breakingbourbon.com/knob-creek-25th-anniversary.html",
@@ -92,3 +92,6 @@ List<LiquorItem> liquoritems = [
 
   ),
 ];
+
+
+

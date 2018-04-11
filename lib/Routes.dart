@@ -12,14 +12,15 @@ class Routes {
       handlerFunc: (BuildContext context, Map<String, dynamic> params) {
         return new LiquorDetail(params["id"][0]);
       });
+  /*
   static var liquorPageHandler = new Handler(
       handlerFunc: (BuildContext context, Map<String, dynamic> params) {
         return new LiquorListBody();
       });
-
+  */
   static void initRoutes() {
     _router.define("/detail/:id", handler: liquorDetailHandler);
-    _router.define("/bourbon", handler: liquorPageHandler);
+   // _router.define("/bourbon", handler: liquorPageHandler);
 
   }
 

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
 import 'package:iphmenu/features/liquor/LiquorListPage.dart';
+
 class LiquorType extends StatelessWidget{
 
   final String title;
@@ -34,7 +35,7 @@ List<LiquorType> _buildLiquorTypeItems () {
 
   final List<LiquorType> liquorTypeItems = <LiquorType>
   [
-    new LiquorType("Bourbon", "assets/img/lightbulb_solo.png", "bourbon", "/bourbon", (BuildContext) => new LiquorListBody("Bourbon")),
+    new LiquorType("Bourbon", "assets/img/lightbulb_solo.png", "Bourbon", "/bourbon", (BuildContext) => new LiquorListBody("Bourbon")),
     new LiquorType("Imported Whiskey", "assets/img/lightbulb_solo.png", "Imported", "/imported", (BuildContext) => new LiquorListBody("Imported Whisky")),
     new LiquorType("Tequila", "assets/img/lightbulb_solo.png", "Tequila", "/tequila", (BuildContext) => new LiquorListBody("Tequila")),
     new LiquorType("Rum", "assets/img/lightbulb_solo.png", "Rum", "/rum", (BuildContext) => new LiquorListBody("Rum")),

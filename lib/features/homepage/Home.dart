@@ -53,7 +53,7 @@ class _HomePageTabbedState extends State<HomePageTabbed> with SingleTickerProvid
       body: new TabBarView(
           controller: _tabController,
           children: [
-            new LiquorListBody(),
+            new Column(),
             new Column(),
             new Column(),
           ]
