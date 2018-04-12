@@ -16,14 +16,14 @@ class LiquorSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    int currentIndex = liquoritems.indexOf(liquoritem);
     final liquorThumbnail = new Container(
       margin: new EdgeInsets.symmetric(
           vertical: horizontal ? 16.0 : 71.0
       ),
       alignment: horizontal ? FractionalOffset.centerLeft : FractionalOffset.center,
       child: new Hero(
-        tag: "liquor-hero-${liquoritem.id}",
+        tag: "liquor-hero-${liquoritem.id}-${currentIndex}",
         child: new Image.network(
           liquoritem.imglink,
           height: 92.0,

@@ -18,7 +18,7 @@ class LiquorItem {
   const LiquorItem({this.id, this.type, this.distillery,this.name, this.price, this.proof,
     this.age, this.style, this.bill, this.color, this.weblink, this.imglink, this.image, this.description});
 
-
+  
 
 }
 

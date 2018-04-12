@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
 
+import 'package:iphmenu/features/admin/AddLiquorForm.dart';
 
 
 final double _kFlexibleSpaceMaxHeight = 256.0;
@@ -89,6 +90,13 @@ class AnimatedAppBar extends StatelessWidget{
           icon: const Icon(Icons.add),
           tooltip: 'Add Liquor',
           onPressed: () {
+            Navigator.of(context).push(
+              new PageRouteBuilder(
+                pageBuilder: (_, __, ___) => new LiquorFormField(),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                new FadeTransition(opacity: animation, child: child),
+              ) ,
+            );
             /*
             Scaffold.of(context).showSnackBar(const SnackBar(
               content: const Text('Not supported.'),

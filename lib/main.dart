@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:iphmenu/features/homepage/SharedPref.dart';
 import 'features/homepage/HomePageLiquor.dart';
 import 'package:iphmenu/Routes.dart';
 import 'modal/MenuModal.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class MenuApp extends StatefulWidget {
   const MenuApp({Key key}) : super(key: key);
@@ -12,7 +15,7 @@ class MenuApp extends StatefulWidget {
 
 class MenuAppState extends State<MenuApp> {
   Widget home = new HomePageLiquor();
-
+  Widget shared = new SharedPref();
   Widget build(BuildContext context) {
     final Map<String, WidgetBuilder> _kRoutes = <String, WidgetBuilder>{};
     for (LiquorType item in kAllLiquorTypeItems) {
@@ -27,7 +30,7 @@ class MenuAppState extends State<MenuApp> {
     return new MaterialApp(
       title: "IPH Menu",
       routes: _kRoutes,
-      home: home,
+      home: shared,
     );
 
   }

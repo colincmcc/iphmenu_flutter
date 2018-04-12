@@ -150,7 +150,7 @@ class HomePageItem extends StatelessWidget {
         onTap: horizontal
             ? () => Navigator.of(context).push(
           new PageRouteBuilder(
-            pageBuilder: (_, __, ___) => new LiquorListBody(liquorType.title),
+            pageBuilder: (_, __, ___) => new LiquorList(liquorType.title),
             transitionsBuilder: (context, animation, secondaryAnimation, child) =>
             new FadeTransition(opacity: animation, child: child),
           ) ,
