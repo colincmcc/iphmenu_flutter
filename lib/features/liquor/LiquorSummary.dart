@@ -19,7 +19,7 @@ class LiquorSummary extends StatelessWidget {
 
     final liquorThumbnail = new Container(
       margin: new EdgeInsets.symmetric(
-          vertical: 16.0
+          vertical: horizontal ? 16.0 : 71.0
       ),
       alignment: horizontal ? FractionalOffset.centerLeft : FractionalOffset.center,
       child: new Hero(
@@ -132,7 +132,7 @@ class LiquorSummary extends StatelessWidget {
       height: horizontal ? 175.0 : 200.0,
       margin: horizontal
           ? new EdgeInsets.only(left: 46.0)
-          : new EdgeInsets.only(top: 72.0),
+          : new EdgeInsets.only(top: 125.0),
       decoration: new BoxDecoration(
         color: Theme.Colors.liquorCard,
         shape: BoxShape.rectangle,

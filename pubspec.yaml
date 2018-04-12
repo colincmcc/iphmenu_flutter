@@ -3,6 +3,8 @@ description: IPH Premium Menu
 
 dependencies:
   fluro: "^1.1.0"
+  shared_preferences:
+      path: ../
   flutter:
     sdk: flutter
   flutter_localizations:

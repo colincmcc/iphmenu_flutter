@@ -83,7 +83,7 @@ class HomePageItem extends StatelessWidget {
 
     final homeThumbnail = new Container(
       margin: new EdgeInsets.symmetric(
-          vertical: 16.0
+          vertical: 8.0
       ),
       alignment: horizontal ? FractionalOffset.centerLeft : FractionalOffset.center,
       child: new Hero(

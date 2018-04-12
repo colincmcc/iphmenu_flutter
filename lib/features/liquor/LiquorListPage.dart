@@ -27,16 +27,7 @@ class LiquorListBody extends StatelessWidget {
 
     return new Expanded(
       child: new Container(
-        decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-                colors: [
-                  Theme.Colors.appBarGradientStart,
-                  Theme.Colors.appBarGradientEnd,
-                ],
-                begin: const FractionalOffset(0.0, 0.0),
-                end: const FractionalOffset(0.0, 1.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp)),
+        color: Theme.Colors.appBarGradientStart,
         child: new CustomScrollView(
           scrollDirection: Axis.vertical,
           shrinkWrap: false,
