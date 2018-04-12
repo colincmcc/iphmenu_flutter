@@ -35,12 +35,12 @@ List<LiquorType> _buildLiquorTypeItems () {
 
   final List<LiquorType> liquorTypeItems = <LiquorType>
   [
-    new LiquorType("Bourbon", "assets/img/lightbulb_solo.png", "Bourbon", "/bourbon", (BuildContext) => new LiquorListBody("Bourbon")),
-    new LiquorType("Imported Whiskey", "assets/img/lightbulb_solo.png", "Imported", "/imported", (BuildContext) => new LiquorListBody("Imported Whisky")),
-    new LiquorType("Tequila", "assets/img/lightbulb_solo.png", "Tequila", "/tequila", (BuildContext) => new LiquorListBody("Tequila")),
-    new LiquorType("Rum", "assets/img/lightbulb_solo.png", "Rum", "/rum", (BuildContext) => new LiquorListBody("Rum")),
-    new LiquorType("Beer", "assets/img/lightbulb_solo.png", "Beer", "/beer", (BuildContext) => new LiquorListBody("Beer")),
-    new LiquorType("Cocktails", "assets/img/lightbulb_solo.png", "Cocktails", "/cocktails", (BuildContext) => new LiquorListBody("Cocktails")),
+    new LiquorType("Bourbon", "assets/img/lightbulb_solo.png", "Bourbon", "/bourbon", (BuildContext) => new LiquorList("Bourbon")),
+    new LiquorType("Imported Whiskey", "assets/img/lightbulb_solo.png", "Imported", "/imported", (BuildContext) => new LiquorList("Imported Whisky")),
+    new LiquorType("Tequila", "assets/img/lightbulb_solo.png", "Tequila", "/tequila", (BuildContext) => new LiquorList("Tequila")),
+    new LiquorType("Rum", "assets/img/lightbulb_solo.png", "Rum", "/rum", (BuildContext) => new LiquorList("Rum")),
+    new LiquorType("Beer", "assets/img/lightbulb_solo.png", "Beer", "/beer", (BuildContext) => new LiquorList("Beer")),
+    new LiquorType("Cocktails", "assets/img/lightbulb_solo.png", "Cocktails", "/cocktails", (BuildContext) => new LiquorList("Cocktails")),
   ];
   return liquorTypeItems;
 }

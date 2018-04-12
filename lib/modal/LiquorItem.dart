@@ -1,21 +1,21 @@
 
 class LiquorItem {
-  final String id;
-  final String type;
-  final String distillery;
-  final String name;
-  final String price;
-  final String proof;
-  final String age;
-  final String style;
-  final String bill;
-  final String color;
-  final String weblink;
-  final String imglink;
-  final String image;
-  final String description;
+   String id;
+   String type;
+   String distillery;
+   String name;
+   String price;
+   String proof;
+   String age;
+   String style;
+   String bill;
+   String color;
+   String weblink;
+   String imglink;
+   String image;
+   String description;
 
-  const LiquorItem({this.id, this.type, this.distillery,this.name, this.price, this.proof,
+   LiquorItem({this.id, this.type, this.distillery,this.name, this.price, this.proof,
     this.age, this.style, this.bill, this.color, this.weblink, this.imglink, this.image, this.description});
 
     Map toJson() {
@@ -36,10 +36,35 @@ class LiquorItem {
       map["description"] = description;
       return map;
     }
+
+  LiquorItem.fromJson(Map json) {
+    this.id = json['id'];
+    this.type = json['type'];
+    this.distillery = json['distillery'];
+    this.name = json['name'];
+    this.price = json['price'];
+    this.proof = json['proof'];
+    this.age = json['age'];
+    this.style = json['style'];
+    this.bill = json['bill'];
+    this.color = json['color'];
+    this.weblink = json['weblink'];
+    this.imglink = json['imglink'];
+    this.image = json['image'];
+    this.description = json['description'];
+
+  }
+
+   static LiquorItem getLiquorById(id) {
+     return liquoritems
+         .where((p) => p.id == id)
+         .first;
+   }
 }
 
 List<LiquorItem> liquoritems = [
-  const LiquorItem(
+ /*
+  new LiquorItem(
     id: "1",
     type: "Bourbon",
     distillery: "Beam Suntory",
@@ -57,7 +82,7 @@ List<LiquorItem> liquoritems = [
 
 
   ),
-  const LiquorItem(
+  new LiquorItem(
     id: "2",
     type: "Tequila",
     distillery: "Beam Suntory",
@@ -74,7 +99,7 @@ List<LiquorItem> liquoritems = [
     description: "assets/img/knob.png",
 
   ),
-  const LiquorItem(
+  new LiquorItem(
     id: "3",
     type: "Rum",
     distillery: "Beam Suntory",
@@ -91,7 +116,7 @@ List<LiquorItem> liquoritems = [
     description: "assets/img/knob.png",
 
   ),
-  const LiquorItem(
+  new LiquorItem(
     id: "4",
     type: "Bourbon",
     distillery: "Beam Suntory",
@@ -107,6 +132,7 @@ List<LiquorItem> liquoritems = [
     description: "Twenty-Five years ago, when Booker Noe bottled the first batch of Knob Creek® bourbon, he inadvertently started a small batch movement. A quarter century later, Booker’s son Fred Noe carries on his legacy, holding every barrel to the same rigorous Pre-Prohibition style standards. And to this day, Knob Creek® remains the benchmark for full-flavored bourbon.",
 
   ),
+  */
 ];
 
 
