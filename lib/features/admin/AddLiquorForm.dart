@@ -38,36 +38,28 @@ class LiquorFormFieldState extends State<LiquorFormField> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   LiquorData liquor = new LiquorData();
-  final String listLiquorItems = jsonEncode(liquoritems);
-  String _liquorList = "";
 
-  _loadLiquorList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _liquorList = (prefs.getString('masterLiquorList'));
-    });
-  }
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  Future<String> _liquorList;
 
   _updateLiquorList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String listLiquorItems = jsonEncode(liquoritems);
+    final SharedPreferences prefs = await _prefs;
+    final String liquorList = json.encode(liquoritems);
 
-    _liquorList = jsonEncode(liquoritems);
     setState(() {
-      _liquorList;
+      _liquorList = prefs.setString("masterLiquorList", liquorList).then((bool success) {
+        return liquorList;
+      });
     });
-    prefs.setString('masterLiquorList', _liquorList);
   }
 
   @override
   void initState() {
     super.initState();
-
-   _loadLiquorList();
+    _liquorList = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getString('masterLiquorList'));
+    });
   }
-
-
-
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(new SnackBar(

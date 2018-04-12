@@ -18,8 +18,24 @@ class LiquorItem {
   const LiquorItem({this.id, this.type, this.distillery,this.name, this.price, this.proof,
     this.age, this.style, this.bill, this.color, this.weblink, this.imglink, this.image, this.description});
 
-  
-
+    Map toJson() {
+      Map map = new Map();
+      map["id"] = id;
+      map["type"] = type;
+      map["distillery"] = distillery;
+      map["name"] = name;
+      map["price"] = price;
+      map["proof"] = proof;
+      map["age"] = age;
+      map["style"] = style;
+      map["bill"] = bill;
+      map["color"] = color;
+      map["weblink"] = weblink;
+      map["imglink"] = imglink;
+      map["image"] = image;
+      map["description"] = description;
+      return map;
+    }
 }
 
 List<LiquorItem> liquoritems = [

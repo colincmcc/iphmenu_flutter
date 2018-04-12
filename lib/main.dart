@@ -30,7 +30,7 @@ class MenuAppState extends State<MenuApp> {
     return new MaterialApp(
       title: "IPH Menu",
       routes: _kRoutes,
-      home: shared,
+      home: home,
     );
 
   }
