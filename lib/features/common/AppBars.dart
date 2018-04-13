@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
 
 import 'package:iphmenu/features/admin/AddLiquorForm.dart';
-
+import 'package:iphmenu/features/admin/LoginPage.dart';
 
 final double _kFlexibleSpaceMaxHeight = 256.0;
 final String _kSmallLogoImage = 'assets/img/lightbulb_solo.png';
@@ -92,7 +92,7 @@ class AnimatedAppBar extends StatelessWidget{
           onPressed: () {
             Navigator.of(context).push(
               new PageRouteBuilder(
-                pageBuilder: (_, __, ___) => new LiquorFormField(),
+                pageBuilder: (_, __, ___) => new LoginPage(),
                 transitionsBuilder: (context, animation, secondaryAnimation, child) =>
                 new FadeTransition(opacity: animation, child: child),
               ) ,
