@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LiquorList extends StatefulWidget{
   const LiquorList(this.liquorType, {Key key}): super(key: key);
   final String liquorType;
+  final bool isAdmin = true;
+
 
   @override
    LiquorListState createState() => new LiquorListState();
@@ -17,13 +19,13 @@ class LiquorList extends StatefulWidget{
 
 class LiquorListState extends State<LiquorList>{
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Future<String> liquorList;
-  
+  Future<String> _liquorList;
+
 
   @override
   void initState() {
     super.initState();
-    liquorList = _prefs.then((SharedPreferences prefs) {
+    _liquorList = _prefs.then((SharedPreferences prefs) {
       return (prefs.getString('masterLiquorList'));
     });
   }
@@ -36,7 +38,7 @@ class LiquorListState extends State<LiquorList>{
           children: <Widget>[
             //_getLiquorContent(widget.liquorType),
             new FutureBuilder<String>(
-              future: liquorList,
+              future: _liquorList,
               builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -58,57 +60,57 @@ class LiquorListState extends State<LiquorList>{
 
   }
 
-  _getStoredLiquorContent(jsonData){
+  _getStoredLiquorContent(jsonData) {
     var data = json.decode(jsonData);
-    final storedLiquorItems = (data as List).map((i) => new LiquorItem.fromJson(i));
+    final storedLiquorItems = (data as List).map((i) => new LiquorItem.fromJson(i)) ;
 
-    List<LiquorItem> storedLiquorByType = storedLiquorItems.where((LiquorItem liquoritem) => liquoritem.type.contains(widget.liquorType)).toList();
+    List<LiquorItem> storedLiquorByType = storedLiquorItems.where((
+        LiquorItem liquoritem) => liquoritem.type.contains(widget.liquorType))
+        .toList();
 
-    return new Expanded(
-      child: new Container(
-        color: Theme.Colors.appBarGradientStart,
-        child: new CustomScrollView(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: false,
-          slivers: <Widget>[
-            new SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0),
-              sliver: new SliverList(
-                delegate: new SliverChildBuilderDelegate(
-                      (context, index) => new LiquorSummary(storedLiquorByType[index]),
-                  childCount: storedLiquorByType.length,
+    void dismissLiquor(index) async {
+      final SharedPreferences prefs = await _prefs;
+
+      setState(() {
+        print(index);
+        storedLiquorByType.removeAt(index);
+        (liquoritems.length >= 1) ? liquoritems.removeAt(index) : null;
+        final String liquorList = json.encode(liquoritems);
+        _liquorList = prefs.setString("masterLiquorList", liquorList).then((
+            bool success) {
+          return liquorList;
+        });
+      });
+    }
+
+      return new Expanded(
+        child: new Container(
+          color: Theme.Colors.appBarGradientStart,
+          child: new CustomScrollView(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: false,
+            slivers: <Widget>[
+              new SliverPadding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                sliver: new SliverList(
+                  delegate:
+                  new SliverChildBuilderDelegate(
+                        (context, index) =>
+                        widget.isAdmin ? new Dismissible(
+                      key: new ObjectKey(LiquorSummary),
+                      onDismissed: (DismissDirection direction) {
+                        dismissLiquor(index);
+                      },
+                      child: new LiquorSummary(storedLiquorByType[index]),
+                    ): new LiquorSummary(storedLiquorByType[index]),
+                    //(context, index) => new LiquorSummary(storedLiquorByType[index]),
+                    childCount: storedLiquorByType.length ,
+                  ) ,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
-
-
-  _getLiquorContent(liquorType){
-    List<LiquorItem> liquorByType = liquoritems.where((LiquorItem liquoritem) => liquoritem.type.contains(liquorType)).toList();
-
-    return new Expanded(
-      child: new Container(
-        color: Theme.Colors.appBarGradientStart,
-        child: new CustomScrollView(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: false,
-          slivers: <Widget>[
-            new SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0),
-              sliver: new SliverList(
-                delegate: new SliverChildBuilderDelegate(
-                      (context, index) => new LiquorSummary(liquorByType[index]),
-                  childCount: liquorByType.length,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      );
+    }
 }

@@ -15,7 +15,6 @@ class MenuApp extends StatefulWidget {
 
 class MenuAppState extends State<MenuApp> {
   Widget home = new HomePageLiquor();
-  Widget shared = new SharedPref();
   Widget build(BuildContext context) {
     final Map<String, WidgetBuilder> _kRoutes = <String, WidgetBuilder>{};
     for (LiquorType item in kAllLiquorTypeItems) {

@@ -61,78 +61,46 @@ class LiquorItem {
          .first;
    }
 }
+//List<LiquorItem> liquoritems = [];
 
-List<LiquorItem> liquoritems = [
- /*
+var defaultLiquorItem =
   new LiquorItem(
-    id: "1",
-    type: "Bourbon",
-    distillery: "Beam Suntory",
-    name: "Knob Creek 25th Anniversary",
-    price: r"$21",
-    proof: "Proof: 122.1",
-    age: "13 Years",
-    style: "Bourbon",
-    bill: "75% Corn, 13% Rye, 12% Malted Barley",
-    color: "Deep Amber",
-    weblink: "http://www.breakingbourbon.com/knob-creek-25th-anniversary.html",
-    imglink: "https://sectorapp.io/knob_logo.png",
-    image: "https://sectorapp.io/knob background.jpg",
-    description: "assets/img/knob.png",
+    id: " ",
+    type: " ",
+    distillery: " ",
+    name: " ",
+    price: r" ",
+    proof: " ",
+    age: " ",
+    style: " ",
+    bill: " ",
+    color: " ",
+    weblink: " ",
+    imglink: " ",
+    image: " ",
+    description: " ",
 
 
-  ),
+  );
+
+final List<LiquorItem> liquoritems = [
   new LiquorItem(
-    id: "2",
-    type: "Tequila",
-    distillery: "Beam Suntory",
-    name: "Knob Creek 25th Anniversary",
-    price: r"$21",
-    proof: "Proof: 122.1",
-    age: "13 Years",
-    style: "Tequila",
-    bill: "75% Corn, 13% Rye, 12% Malted Barley",
-    color: "Deep Amber",
-    weblink: "http://www.breakingbourbon.com/knob-creek-25th-anniversary.html",
-    imglink: "https://sectorapp.io/knob_logo.png",
-    image: "https://sectorapp.io/knob background.jpg",
-    description: "assets/img/knob.png",
-
+      id: "1",
+      type: " ",
+      distillery: " ",
+      name: " ",
+      price: r" ",
+      proof: " ",
+      age: " ",
+      style: " ",
+      bill: " ",
+      color: " ",
+      weblink: " ",
+      imglink: " ",
+      image: " ",
+      description: " ",
   ),
-  new LiquorItem(
-    id: "3",
-    type: "Rum",
-    distillery: "Beam Suntory",
-    name: "Knob Creek 25th Anniversary",
-    price: r"$21",
-    proof: "Proof: 122.1",
-    age: "13 Years",
-    style: "Rum",
-    bill: "75% Corn, 13% Rye, 12% Malted Barley",
-    color: "Deep Amber",
-    weblink: "http://www.breakingbourbon.com/knob-creek-25th-anniversary.html",
-    imglink: "https://sectorapp.io/knob_logo.png",
-    image: "https://sectorapp.io/knob background.jpg",
-    description: "assets/img/knob.png",
 
-  ),
-  new LiquorItem(
-    id: "4",
-    type: "Bourbon",
-    distillery: "Beam Suntory",
-    name: "Knob Creek 25th Anniversary",
-    price: r"$21",
-    proof: "Proof: 122.1",
-    age: "13 Years",
-    style: "Bourbon",
-    bill: "75% Corn, 13% Rye, 12% Malted Barley",
-    color: "Deep Amber",
-    imglink: "https://sectorapp.io/knob_logo.png",
-    image: "https://sectorapp.io/knob background.jpg",
-    description: "Twenty-Five years ago, when Booker Noe bottled the first batch of Knob Creek® bourbon, he inadvertently started a small batch movement. A quarter century later, Booker’s son Fred Noe carries on his legacy, holding every barrel to the same rigorous Pre-Prohibition style standards. And to this day, Knob Creek® remains the benchmark for full-flavored bourbon.",
-
-  ),
-  */
 ];
 
 

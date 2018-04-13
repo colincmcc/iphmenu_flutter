@@ -59,6 +59,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
     _liquorList = _prefs.then((SharedPreferences prefs) {
       return (prefs.getString('masterLiquorList'));
     });
+    _updateLiquorList();
   }
 
   void showInSnackBar(String value) {
@@ -77,26 +78,29 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   void _handleSubmitted() {
     final FormState form = _formKey.currentState;
     form.save();
-    int lastIndex = int.parse(liquoritems.last.id)+1;
+
+    int lastIndex = (liquoritems.last.id != "") ? int.parse(liquoritems.last.id)+1 : 1;
     String currentIndex = lastIndex.toString();
-    liquoritems.insert(0,
-      new LiquorItem(
-        id: currentIndex,
-        type: liquor.type,
-        distillery: liquor.distillery,
-        name: liquor.name,
-        price: r"$" + liquor.price,
-        proof: "Proof " + liquor.proof,
-        age: liquor.age,
-        style: liquor.style,
-        bill: liquor.bill,
-        color: liquor.color,
-        weblink: liquor.weblink,
-        imglink: liquor.imglink,
-        image: liquor.image,
-        description: liquor.description,
-      )
+
+    var formLiquorItem = new LiquorItem(
+      id: currentIndex,
+      type: liquor.type,
+      distillery: liquor.distillery,
+      name: liquor.name,
+      price: r"$" + liquor.price,
+      proof: "Proof " + liquor.proof,
+      age: liquor.age,
+      style: liquor.style,
+      bill: liquor.bill,
+      color: liquor.color,
+      weblink: liquor.weblink,
+      imglink: liquor.imglink,
+      image: liquor.image,
+      description: liquor.description,
     );
+
+
+    (liquoritems != null) ? liquoritems.insert(0, formLiquorItem) : null;
     _updateLiquorList();
 
 

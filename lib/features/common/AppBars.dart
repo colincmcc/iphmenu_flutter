@@ -97,12 +97,6 @@ class AnimatedAppBar extends StatelessWidget{
                 new FadeTransition(opacity: animation, child: child),
               ) ,
             );
-            /*
-            Scaffold.of(context).showSnackBar(const SnackBar(
-              content: const Text('Not supported.'),
-            ));
-
-           */
 
           },
         ),

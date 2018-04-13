@@ -45,15 +45,6 @@ class HomePageLiquorState extends State<HomePageLiquor>{
 
     return home;
   }
-
-  Widget _buildBody(){
-    return new SliverList(
-        delegate: new SliverChildListDelegate(
-            _menuListItems()
-        )
-    );
-
-  }
 }
 _getHomeContent() {
   return new Container(
@@ -96,20 +87,6 @@ class HomePageItem extends StatelessWidget {
       ),
     );
 
-
-
-    Widget _liquorValue({String value, String image}) {
-      return new Container(
-        child: new Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              new Image.asset(image, height: 12.0),
-              new Container(width: 8.0),
-              new Text(value, style: Theme.TextStyles.appBarTitle),
-            ]
-        ),
-      );
-    }
 
 
     final homeCardContent = new Container(
@@ -173,22 +150,3 @@ class HomePageItem extends StatelessWidget {
 
 
 }
-
-/*
-class HomePageBody extends StatefulWidget{
-  @override
-  _HomePageBodyState createState() => new _HomePageBodyState();
-
-}
-
-class _HomePageBodyState extends State<HomePageBody> {
-
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: new Container(
-        child: new MenuList(_buildMenuList()),
-      ),
-    );
-  }
-}
-*/
