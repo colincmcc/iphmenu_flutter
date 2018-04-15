@@ -1,9 +1,13 @@
 import 'dart:async';
 
-import 'package:iphmenu/features/common/AppBars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:iphmenu/features/common/AppBars.dart';
+import 'package:iphmenu/data/PreferenceData.dart';
+
+
 
 import 'package:iphmenu/Theme.dart' as Theme;
 
@@ -14,6 +18,7 @@ class LoginPage extends StatefulWidget{
 }
 
 class LoginPageState extends State<LoginPage>{
+
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<bool> _isSetup;
   Future<bool> _isAdmin;
