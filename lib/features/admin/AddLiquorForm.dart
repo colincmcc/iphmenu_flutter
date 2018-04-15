@@ -70,13 +70,12 @@ class LiquorFormFieldState extends State<LiquorFormField> {
 
   bool _autovalidate = false;
   bool _formWasEdited = false;
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final GlobalKey<FormState> _formLiquorKey = new GlobalKey<FormState>();
   final GlobalKey<FormFieldState<String>> _passwordFieldKey = new GlobalKey<FormFieldState<String>>();
-  final _UsNumberTextInputFormatter _phoneNumberFormatter = new _UsNumberTextInputFormatter();
 
 
   void _handleSubmitted() {
-    final FormState form = _formKey.currentState;
+    final FormState form = _formLiquorKey.currentState;
     form.save();
 
     int lastIndex = (liquoritems.last.id != "") ? int.parse(liquoritems.last.id)+1 : 1;
@@ -106,36 +105,9 @@ class LiquorFormFieldState extends State<LiquorFormField> {
 
   }
 
-  String _validateName(String value) {
-    _formWasEdited = true;
-    if (value.isEmpty)
-      return 'Name is required.';
-    final RegExp nameExp = new RegExp(r'^[A-Za-z ]+$');
-    if (!nameExp.hasMatch(value))
-      return 'Please enter only alphabetical characters.';
-    return null;
-  }
-
-  String _validatePhoneNumber(String value) {
-    _formWasEdited = true;
-    final RegExp phoneExp = new RegExp(r'^\(\d\d\d\) \d\d\d\-\d\d\d\d$');
-    if (!phoneExp.hasMatch(value))
-      return '(###) ###-#### - Please enter a valid US phone number.';
-    return null;
-  }
-
-  String _validatePassword(String value) {
-    _formWasEdited = true;
-    final FormFieldState<String> passwordField = _passwordFieldKey.currentState;
-    if (passwordField.value == null || passwordField.value.isEmpty)
-      return 'Please choose a password.';
-    if (passwordField.value != value)
-      return 'Passwords don\'t match';
-    return null;
-  }
 
   Future<bool> _warnUserAboutInvalidData() async {
-    final FormState form = _formKey.currentState;
+    final FormState form = _formLiquorKey.currentState;
     if (form == null || !_formWasEdited || form.validate())
       return true;
 
@@ -167,7 +139,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
         top: false,
         bottom: false,
         child: new Form(
-          key: _formKey,
+          key: _formLiquorKey,
           autovalidate: _autovalidate,
           onWillPop: _warnUserAboutInvalidData,
           child: new SingleChildScrollView(
@@ -318,43 +290,4 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   }
 }
 
-/// Format incoming numeric text to fit the format of (###) ###-#### ##...
-class _UsNumberTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue
-      ) {
-    final int newTextLength = newValue.text.length;
-    int selectionIndex = newValue.selection.end;
-    int usedSubstringIndex = 0;
-    final StringBuffer newText = new StringBuffer();
-    if (newTextLength >= 1) {
-      newText.write('(');
-      if (newValue.selection.end >= 1)
-        selectionIndex++;
-    }
-    if (newTextLength >= 4) {
-      newText.write(newValue.text.substring(0, usedSubstringIndex = 3) + ') ');
-      if (newValue.selection.end >= 3)
-        selectionIndex += 2;
-    }
-    if (newTextLength >= 7) {
-      newText.write(newValue.text.substring(3, usedSubstringIndex = 6) + '-');
-      if (newValue.selection.end >= 6)
-        selectionIndex++;
-    }
-    if (newTextLength >= 11) {
-      newText.write(newValue.text.substring(6, usedSubstringIndex = 10) + ' ');
-      if (newValue.selection.end >= 10)
-        selectionIndex++;
-    }
-    // Dump the rest.
-    if (newTextLength >= usedSubstringIndex)
-      newText.write(newValue.text.substring(usedSubstringIndex));
-    return new TextEditingValue(
-      text: newText.toString(),
-      selection: new TextSelection.collapsed(offset: selectionIndex),
-    );
-  }
-}
+

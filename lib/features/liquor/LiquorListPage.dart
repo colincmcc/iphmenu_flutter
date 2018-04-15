@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LiquorList extends StatefulWidget{
   const LiquorList(this.liquorType, {Key key}): super(key: key);
   final String liquorType;
-  final bool isAdmin = true;
 
 
   @override
@@ -18,8 +17,12 @@ class LiquorList extends StatefulWidget{
 }
 
 class LiquorListState extends State<LiquorList>{
+
+
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<String> _liquorList;
+  Future<bool> _isAdmin;
+  bool isAdmin = false;
 
 
   @override
@@ -28,6 +31,11 @@ class LiquorListState extends State<LiquorList>{
     _liquorList = _prefs.then((SharedPreferences prefs) {
       return (prefs.getString('masterLiquorList'));
     });
+   /* _isAdmin = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getInt('isAdmin') ?? 0);
+    });
+    (_isAdmin == 1) ? isAdmin = true : null;
+    */
   }
 
   @override
@@ -96,7 +104,7 @@ class LiquorListState extends State<LiquorList>{
                   delegate:
                   new SliverChildBuilderDelegate(
                         (context, index) =>
-                        widget.isAdmin ? new Dismissible(
+                        isAdmin ? new Dismissible(
                       key: new ObjectKey(LiquorSummary),
                       onDismissed: (DismissDirection direction) {
                         dismissLiquor(index);

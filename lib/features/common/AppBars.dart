@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
 
 import 'package:iphmenu/features/admin/AddLiquorForm.dart';
-import 'package:iphmenu/features/admin/LoginPage.dart';
+import 'package:iphmenu/features/admin/LocalLogin.dart';
 
 final double _kFlexibleSpaceMaxHeight = 256.0;
 final String _kSmallLogoImage = 'assets/img/lightbulb_solo.png';

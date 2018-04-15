@@ -9,13 +9,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn _googleSignIn = new GoogleSignIn();
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  LoginPage({Key key}) : super(key: key);
 
   @override
   _LoginPageState createState() => new _LoginPageState();
@@ -23,36 +22,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Future<int> _isSetup;
-  Future<int> _isAdmin;
+  Future<bool> _isSetup;
+  Future<bool> _isAdmin;
   Future<String> _adminUid;
 
   Future<String> _message = new Future<String>.value('');
 
-  Future<String> _testSignInAnonymously() async {
-    final FirebaseUser user = await _auth.signInAnonymously();
-    assert(user != null);
-    assert(user.isAnonymous);
-    assert(!user.isEmailVerified);
-    assert(await user.getIdToken() != null);
-    if (Platform.isIOS) {
-      // Anonymous auth doesn't show up as a provider on iOS
-      assert(user.providerData.isEmpty);
-    } else if (Platform.isAndroid) {
-      // Anonymous auth does show up as a provider on Android
-      assert(user.providerData.length == 1);
-      assert(user.providerData[0].providerId == 'firebase');
-      assert(user.providerData[0].uid != null);
-      assert(user.providerData[0].displayName == null);
-      assert(user.providerData[0].photoUrl == null);
-      assert(user.providerData[0].email == null);
-    }
-
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-
-    return 'signInAnonymously succeeded: $user';
-  }
+/*
 
   Future<String> _setupGoogleUser() async {
     final SharedPreferences prefs = await _prefs;
@@ -99,36 +75,54 @@ class _LoginPageState extends State<LoginPage> {
       return (prefs.getString('adminUid'));
     });
     if (_adminUid == user.uid) {
+      _loginUser();
       return 'Google Sign-in succeeded for ${user
           .displayName}.  Admin Mode is turned on.';
     }
   }
-
+*/
   @override
   void initState() {
     super.initState();
     _isSetup = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getInt('isSetup') ?? 0);
+      return (prefs.getBool('isSetup')) ?? false;
     });
+    print (_isSetup.value);
   }
 
   // If the user hasn't been setup yet, initiate a new user
-  _setupLogin() async {
+  _setupUser() async {
     final SharedPreferences prefs = await _prefs;
-    setState(() {
-      _isSetup = prefs.setInt("isSetup", 1).then((bool success) {
-        return _isSetup;
-      });
-    });
+
+    return new Column(
+      children: <Widget>[
+        new Text("setup user")
+      ],
+    );
+
   }
 
   // Login user
   _loginUser() async {
     final SharedPreferences prefs = await _prefs;
+    setState(() {
+      _isAdmin = prefs.setBool("isAdmin", true).then((bool success) {
+        return _isAdmin;
 
-    
+      });
+    });
   }
 
+  // Change the admin Google user
+
+  _changeAdminUser() async {
+    final SharedPreferences prefs = await _prefs;
+    setState(() {
+      _isSetup = prefs.setBool("isSetup", false).then((bool success) {
+        return _isSetup;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -138,24 +132,59 @@ class _LoginPageState extends State<LoginPage> {
       body: new Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _setupLogin(),
-          new MaterialButton(
-              child: const Text('Sign In with Google'),
-              onPressed: () {
-                _loginUser();
-                setState(() {
-                  _message = _loginGoogleUser();
-                });
-              }),
-          new FutureBuilder<String>(
-              future: _message,
-              builder: (_, AsyncSnapshot<String> snapshot) {
-                return new Text(snapshot.data ?? '',
-                    style: const TextStyle(
-                        color: const Color.fromARGB(255, 0, 155, 0)));
-              }),
+          (_isSetup == false) ? new Text("isSetup is False") : new Text("isSetup is True"),
+          new FutureBuilder<bool>(
+              future: _isSetup,
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return const CircularProgressIndicator();
+                  default:
+                    if (snapshot.hasError)
+                      return new Text('Error: ${snapshot.error}');
+                    else
+                      return (snapshot.data == false) ? new LoginScreen() : new SetupScreen();
+
+                    }
+                }
+              ),
         ],
       ),
+    );
+  }
+}
+
+class LoginScreen extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    return new Expanded(
+        child: new Column(
+          children: <Widget>[
+            new Text("")
+          ],
+        )
+    );
+  }
+}
+class SetupScreen extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    return new Expanded(
+        child: new Column(
+          children: <Widget>[
+            new Text("To intialize admin features, please sign in with the Google account associated with the admin."),
+            /*
+            new RaisedButton(
+              child: const Text('Sign In'),
+              onPressed: (){
+                _setupUser();
+                print(snapshot.data);
+              },
+            ) */
+          ],
+        )
     );
   }
 }
