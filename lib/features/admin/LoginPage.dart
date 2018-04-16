@@ -24,6 +24,15 @@ class LoginPageState extends State<LoginPage>{
 
 
 
+  String _adminFirstPinEntry;
+  String _adminSecondPinEntry;
+
+  String _labelText = "Please enter a pin: ";
+  String _validatorMessage = "";
+
+
+
+
   Future<Null> getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isSetup = prefs.getBool("isSetup");
@@ -31,12 +40,15 @@ class LoginPageState extends State<LoginPage>{
       (isSetup)? loginScreen = _loginAdmin() : loginScreen = _setupAdmin();
     });
   }
-  Future<Null> setSharedPrefs(String _adminPin, bool success) async {
+  Future<Null> setSharedPrefs(String _adminPin) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int adminPin = int.parse(_adminPin);
     setState(() {
-      prefs.setBool("isSetup", success);
+      prefs.setBool("isSetup", true);
       prefs.setInt("adminPin", adminPin);
+
+      isSetup = prefs.getBool("isSetup");
+      adminPin = prefs.getInt("adminPin");
       print(isSetup);
       print(adminPin);
     });
@@ -54,13 +66,107 @@ class LoginPageState extends State<LoginPage>{
       appBar: new PreferredSize(child: new GradientAppBar("Admin"), preferredSize: const Size.fromHeight(48.0)),
       body: new Column(
         children: <Widget>[
-          new LoginAdmin(isSetup, context)
-      ),
+          new Container(
+            margin: new EdgeInsets.fromLTRB(16.0, 76.0, 16.0, 16.0),
+            child: new TextField(
+              controller:  _controller,
+              keyboardType: TextInputType.number,
+              maxLength: 4,
+              obscureText: true,
+              decoration: new InputDecoration(
+                labelText: _labelText,
+                hintText: 'Enter Pin',
+
+              ),
+            ),
+          ),
+
+          new Container(height: 8.0,),
+          new Text('$_validatorMessage'),
+          new Container(height: 8.0,),
+          new RaisedButton(
+            onPressed: () {
+              if(_adminFirstPinEntry == null)
+                _validateFirstAdminPin(_controller.text);
+              if(_validateSecondAdminPin == null)
+                _validateSecondAdminPin(_controller.text);
+              else
+
+              print(_adminFirstPinEntry);
+              print(_adminSecondPinEntry);
+
+            },
+            child: new Text('SUBMIT'),
+          ),
+          ]
+          ),
     );
   }
+  _submitFirstPin(String value){
+    setState(() {
+      _adminFirstPinEntry = value;
+      _labelText = "Re-enter Pin: ";
+    });
+  }
+  _submitSecondPin(String _adminPin){
+    setSharedPrefs(_adminPin);
+    _controller.clear();
+    setState((){
+      _validatorMessage = "Thank you!  The admin pin is set.";
+    });
+  }
 
+  _submitLogin(String adminPin){
 
+  }
+  _resetForm(){
+    _controller.clear();
+    setState((){
+      _adminFirstPinEntry = null;
+      _labelText = "Please enter a pin: ";
+    });
 
+  }
+
+  _validateFirstAdminPin(String value) {
+    setState(() {
+      if (value.isEmpty)
+        _validatorMessage = 'Pin is required.';
+      final RegExp pinExp = new RegExp(r'[0-9]{4}');
+      if (!pinExp.hasMatch(value))
+        _validatorMessage = 'Please enter a 4 digit numerical pin.';
+      else {
+        _submitFirstPin(value);
+        _controller.clear();
+      }
+    });
+  }
+
+  _validateSecondAdminPin(String value){
+
+    setState(() {
+      if (value.isEmpty) {
+        _validatorMessage = 'Pin is required.';
+      }
+      final RegExp pinExp = new RegExp(r'[0-9]{4}');
+      if (!pinExp.hasMatch(value))
+        _validatorMessage = 'Please enter a 4 digit numerical pin.';
+      if (value != _adminFirstPinEntry){
+        _validatorMessage = 'Pins do not match';
+        _resetForm();
+      }
+      else
+        _submitSecondPin(value);
+    });
+  }
+
+  Widget _setupAdmin() {
+    return new Column(
+      children: <Widget>[
+
+      ],
+    );
+  }
 
   Widget _loginAdmin() {
     return new Column(
@@ -82,108 +188,3 @@ class LoginPageState extends State<LoginPage>{
   }
 }
 
-class LoginAdmin extends StatelessWidget{
-  LoginAdmin(this.isSetup, this.context);
-
-  var loginScreen;
-  bool isSetup;
-  BuildContext context;
-
-  String _adminFirstPinEntry;
-  String _adminSecondPinEntry;
-
-  String _labelText = "Please enter a pin: ";
-  String _validatorMessage = "Validator";
-
-  final TextEditingController _controller = new TextEditingController();
-
-
-  _submitFirstPin(String value){
-
-
-    _adminFirstPinEntry = value;
-    _labelText = "Re-enter Pin: ";
-
-    _controller.clear;
-
-  }
-  _submitSecondPin(String _adminPin, bool success){
-
-    setSharedPrefs(_adminPin, success);
-    _controller.clear();
-
-    setState((){
-      context.loginScreen = _loginAdmin();
-    });
-  }
-  _resetForm(){
-    _controller.clear();
-    setState((){
-      _adminFirstPinEntry = null;
-    });
-
-  }
-
-  void _validateFirstAdminPin(String value){
-    setState(() {
-      _validatorMessage = 'Validating...';
-
-    });
-
-    if (value.isEmpty)
-      _validatorMessage = 'Pin is required.';
-    final RegExp pinExp = new RegExp(r'[0-9]{4}');
-    if (!pinExp.hasMatch(value))
-      _validatorMessage = 'Please enter a 4 digit numerical pin.';
-    else
-      _submitFirstPin(value);
-  }
-
-  _validateSecondAdminPin(String value){
-
-
-
-    if (value.isEmpty) {
-
-      _validatorMessage = 'Pin is required.';
-    }
-    final RegExp pinExp = new RegExp(r'[0-9]{4}');
-    if (!pinExp.hasMatch(value))
-      _validatorMessage = 'Please enter a 4 digit numerical pin.';
-    if (value != _adminFirstPinEntry){
-      _validatorMessage = 'Pins do not match';
-      _resetForm();
-    }
-    else
-      _submitSecondPin(value, true);
-
-  }
-
-
-
-  @override
-Widget build(BuildContext context) {
-    return new Column(
-      children: <Widget>[
-        new TextField(
-          controller:  _controller,
-          decoration: new InputDecoration(
-            labelText: _labelText ?? "",
-            hintText: 'Enter Pin',
-          ),
-        ),
-        new RaisedButton(
-          onPressed: () {
-            _validateFirstAdminPin(_controller.text);
-            print(isSetup);
-            print(_adminFirstPinEntry);
-            print(_controller.text);
-          },
-          child: new Text('SUBMIT'),
-        ),
-        new Text('$_validatorMessage')
-      ],
-    );;
-  }
-
-}
