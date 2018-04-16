@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:iphmenu/features/admin/AddLiquorForm.dart';
 import 'package:iphmenu/features/admin/LoginPage.dart';
@@ -68,12 +70,65 @@ class GradientAppBar extends StatelessWidget {
     );
   }
 }
+class Choice {
+  const Choice({ this.title});
+  final String title;
+}
+const List<Choice> choices = const <Choice>[
+  const Choice(title: 'Login'),
+  const Choice(title: 'Logout'),
+  const Choice(title: 'Setup Pin'),
+];
 
-class AnimatedAppBar extends StatelessWidget{
-  const AnimatedAppBar(this.context, this.pageTitle);
+class AnimatedAppBar extends StatefulWidget{
+  AnimatedAppBar(this.context, this.pageTitle);
   final BuildContext context;
   final String pageTitle;
 
+  AnimatedAppBarState createState() => new AnimatedAppBarState();
+}
+
+
+class AnimatedAppBarState extends State<AnimatedAppBar>{
+  bool isSetup;
+  bool isAdmin;
+  List<Choice> availChoices;
+
+  Choice _selectedChoice = choices[0]; // The app's "state".
+
+  void _select(Choice choice) {
+    setState(() { // Causes the app to rebuild with the new _selectedChoice.
+      _selectedChoice = choice;
+
+    });
+    Navigator.of(widget.context).push(
+      new PageRouteBuilder(
+        pageBuilder: (_, __, ___) => new LoginPage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        new FadeTransition(opacity: animation, child: child),
+      ) ,
+    );
+  }
+
+  Future<Null> getSharedPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isSetup = prefs.getBool("isSetup");
+    isAdmin = prefs.getBool("isAdmin");
+    setState(() {
+      if(isSetup) {
+        List<Choice> availChoices = choices.getRange(0, 1);
+      }
+      else
+        List<Choice> availChoices = choices.getRange(2, 2);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getSharedPrefs();
+    print(availChoices);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +141,17 @@ class AnimatedAppBar extends StatelessWidget{
       pinned: true,
       expandedHeight: _kAppBarHeight,
       actions: <Widget>[
+        new PopupMenuButton<Choice>( // overflow menu
+          onSelected: _select,
+          itemBuilder: (BuildContext context) {
+            return availChoices.map((Choice choice) {
+              return new PopupMenuItem<Choice>(
+                value: choice,
+                child: new Text(choice.title),
+              );
+            }).toList();
+          },
+        ),
         new IconButton(
           icon: const Icon(Icons.add),
           tooltip: 'Add Liquor',
@@ -127,7 +193,7 @@ class AnimatedAppBar extends StatelessWidget{
                 bottom: extraPadding,
               ),
               child: new Center(
-                  child: new PageLogo(height: logoHeight, t: t.clamp(0.0, 1.0), pageTitle: pageTitle)
+                  child: new PageLogo(height: logoHeight, t: t.clamp(0.0, 1.0), pageTitle: widget.pageTitle)
               ),
             )
           );
