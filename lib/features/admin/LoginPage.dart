@@ -21,7 +21,7 @@ class LoginPageState extends State<LoginPage>{
 
   var loginScreen;
   bool isSetup;
-
+  int adminPin;
 
 
   String _adminFirstPinEntry;
@@ -32,12 +32,14 @@ class LoginPageState extends State<LoginPage>{
 
 
 
-
   Future<Null> getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isSetup = prefs.getBool("isSetup");
+    adminPin = prefs.getInt("adminPin");
     setState(() {
-      (isSetup)? loginScreen = _loginAdmin() : loginScreen = _setupAdmin();
+      if(isSetup) {
+        _labelText = "Please enter your Pin: ";
+      }
     });
   }
   Future<Null> setSharedPrefs(String _adminPin) async {
@@ -52,6 +54,21 @@ class LoginPageState extends State<LoginPage>{
       print(isSetup);
       print(adminPin);
     });
+  }
+  Future<Null> checkLogin(String _submittedPin) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int submittedPin = int.parse(_submittedPin);
+    setState(() {
+      int adminPin = prefs.getInt("adminPin");
+      if(submittedPin == adminPin) {
+        prefs.setBool("isAdmin", true);
+        _validatorMessage = "Success!  You are now logged in!";
+
+      }
+      else
+        _validatorMessage = "Incorrect Pin.  Please Try again.";
+    });
+    _controller.clear();
   }
 
   @override
@@ -86,14 +103,16 @@ class LoginPageState extends State<LoginPage>{
           new Container(height: 8.0,),
           new RaisedButton(
             onPressed: () {
-              if(_adminFirstPinEntry == null)
+              if(_adminFirstPinEntry == null && isSetup != true)
                 _validateFirstAdminPin(_controller.text);
-              if(_validateSecondAdminPin == null)
+              if(_validateSecondAdminPin == null && isSetup != true)
                 _validateSecondAdminPin(_controller.text);
               else
-
+                checkLogin(_controller.text);
               print(_adminFirstPinEntry);
               print(_adminSecondPinEntry);
+              print(isSetup);
+              print("$adminPin");
 
             },
             child: new Text('SUBMIT'),
