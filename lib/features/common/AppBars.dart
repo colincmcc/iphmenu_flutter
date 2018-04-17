@@ -70,16 +70,10 @@ class GradientAppBar extends StatelessWidget {
     );
   }
 }
-class Choice {
-  const Choice({ this.title});
-  final String title;
+enum AppbarAction {
+  login,
+  addliquor
 }
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Login'),
-  const Choice(title: 'Logout'),
-  const Choice(title: 'Setup Pin'),
-];
-
 class AnimatedAppBar extends StatefulWidget{
   AnimatedAppBar(this.context, this.pageTitle);
   final BuildContext context;
@@ -92,34 +86,71 @@ class AnimatedAppBar extends StatefulWidget{
 class AnimatedAppBarState extends State<AnimatedAppBar>{
   bool isSetup;
   bool isAdmin;
-  List<Choice> availChoices;
+  String _loginStatus = "not set";
 
-  Choice _selectedChoice = choices[0]; // The app's "state".
 
-  void _select(Choice choice) {
-    setState(() { // Causes the app to rebuild with the new _selectedChoice.
-      _selectedChoice = choice;
 
-    });
-    Navigator.of(widget.context).push(
-      new PageRouteBuilder(
-        pageBuilder: (_, __, ___) => new LoginPage(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-        new FadeTransition(opacity: animation, child: child),
-      ) ,
-    );
-  }
-
-  Future<Null> getSharedPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    isSetup = prefs.getBool("isSetup");
-    isAdmin = prefs.getBool("isAdmin");
-    setState(() {
-      if(isSetup) {
-        List<Choice> availChoices = choices.getRange(0, 1);
+  void _addLiquor() {
+    print("add liquor isadmin $isAdmin");
+    if(isAdmin) {
+        Navigator.of(widget.context).push(
+          new PageRouteBuilder(
+            pageBuilder: (_, __, ___) => new LiquorFormField(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            new FadeTransition(opacity: animation, child: child),
+          ) ,
+        );
       }
       else
-        List<Choice> availChoices = choices.getRange(2, 2);
+        print("not admin");
+  }
+
+
+  void _loginPage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+      isAdmin = prefs.getBool("isAdmin");
+      print(isAdmin);
+      if(isAdmin) {
+        print("logging out");
+        prefs.setBool("isAdmin", false);
+        isAdmin = prefs.getBool("isAdmin");
+        _loginStatus = "Login";
+        }
+
+      else {
+        Navigator.of(widget.context).push(
+          new PageRouteBuilder(
+            pageBuilder: (_, __, ___) => new LoginPage(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            new FadeTransition(opacity: animation, child: child),
+          ) ,
+        );
+      }
+    });
+    print(isAdmin);
+
+  }
+  Future<Null> getSharedPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isSetup = prefs.getBool("isSetup") ?? false;
+    isAdmin = prefs.getBool("isAdmin")  ?? false;
+    print(isSetup);
+    print(isAdmin);
+    setState(() {
+
+      if(isSetup) {
+        _loginStatus = "Login";
+        print("login");
+      }
+      if(isAdmin) {
+        _loginStatus = "Logout";
+        print("logout");
+      }
+      if (isSetup = false) {
+        _loginStatus = "Setup Pin";
+        print("setup pin");
+      }
     });
   }
 
@@ -127,7 +158,6 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
   void initState() {
     super.initState();
     getSharedPrefs();
-    print(availChoices);
   }
 
   @override
@@ -141,31 +171,30 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
       pinned: true,
       expandedHeight: _kAppBarHeight,
       actions: <Widget>[
-        new PopupMenuButton<Choice>( // overflow menu
-          onSelected: _select,
-          itemBuilder: (BuildContext context) {
-            return availChoices.map((Choice choice) {
-              return new PopupMenuItem<Choice>(
-                value: choice,
-                child: new Text(choice.title),
-              );
-            }).toList();
-          },
-        ),
-        new IconButton(
-          icon: const Icon(Icons.add),
-          tooltip: 'Add Liquor',
-          onPressed: () {
-            Navigator.of(context).push(
-              new PageRouteBuilder(
-                pageBuilder: (_, __, ___) => new LoginPage(),
-                transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-                new FadeTransition(opacity: animation, child: child),
-              ) ,
-            );
+        new PopupMenuButton<AppbarAction>(
+            itemBuilder: (BuildContext context) => <PopupMenuItem<AppbarAction>>[
+              new PopupMenuItem<AppbarAction>(
+                  value: AppbarAction.login,
+                  child: new Text(_loginStatus)
+              ),
 
-          },
+              const PopupMenuItem<AppbarAction>(
+                  value: AppbarAction.addliquor,
+                  child: const Text('Add Liquor')
+              ),
+            ],
+            onSelected: (AppbarAction action) {
+              switch (action) {
+                case AppbarAction.login:
+                  _loginPage();
+                  break;
+                case AppbarAction.addliquor:
+                  _addLiquor();
+                  break;
+              }
+            }
         ),
+
       ],
       flexibleSpace: new LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {

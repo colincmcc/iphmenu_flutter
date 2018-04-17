@@ -1,15 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:iphmenu/modal/MenuModal.dart';
+import 'package:iphmenu/modal/LiquorItem.dart';
 import 'package:iphmenu/features/common/AppBars.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
-import 'package:iphmenu/modal/MenuModal.dart';
-import 'package:flutter/foundation.dart';
 import 'package:iphmenu/features/liquor/LiquorListPage.dart';
 
-const double _kFlexibleSpaceMaxHeight = 256.0;
-const String _kSmallLogoImage = 'assets/img/lightbulb_solo.png';
-const double _kAppBarHeight = 128.0;
-const double _kFabHalfSize = 28.0; // TODO(mpcomplete): needs to adapt to screen size
-const double _kLiquorPageMaxWidth = 500.0;
+
 
 class HomePageLiquor extends StatefulWidget {
   const HomePageLiquor({Key key}): super(key: key);
@@ -23,6 +25,7 @@ class HomePageLiquorState extends State<HomePageLiquor>{
   static final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 
+
   List<Widget> _menuListItems() {
     final List<Widget> listItems = <Widget>[];
     for (LiquorType liquorType in kAllLiquorTypeItems) {
@@ -31,6 +34,12 @@ class HomePageLiquorState extends State<HomePageLiquor>{
     return listItems;
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget home = new Scaffold(
       backgroundColor: Theme.Colors.appBarGradientStart,
@@ -45,28 +54,27 @@ class HomePageLiquorState extends State<HomePageLiquor>{
 
     return home;
   }
-}
-_getHomeContent() {
-  return new Container(
-    child: new SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 24.0),
-      sliver: new SliverList(
-        delegate: new SliverChildBuilderDelegate(
-              (context, index) => new HomePageItem(kAllLiquorTypeItems[index]),
-          childCount: kAllLiquorTypeItems.length,
-        ),
-      ),
-    )
-  );
+  _getHomeContent() {
+    return new Container(
+        child: new SliverPadding(
+          padding: const EdgeInsets.symmetric(vertical: 24.0),
+          sliver: new SliverList(
+            delegate: new SliverChildBuilderDelegate(
+                  (context, index) => new HomePageItem(kAllLiquorTypeItems[index]),
+              childCount: kAllLiquorTypeItems.length,
+            ),
+          ),
+        )
+    );
+  }
 
 }
+
 
 class HomePageItem extends StatelessWidget {
   final LiquorType liquorType;
-  final bool horizontal;
 
-  HomePageItem(this.liquorType, {this.horizontal = true} );
-
+  HomePageItem(this.liquorType);
 
 
   @override
@@ -76,7 +84,7 @@ class HomePageItem extends StatelessWidget {
       margin: new EdgeInsets.symmetric(
           vertical: 8.0
       ),
-      alignment: horizontal ? FractionalOffset.centerLeft : FractionalOffset.center,
+      alignment:  FractionalOffset.centerLeft,
       child: new Hero(
         tag: "liquor-hero-${liquorType.title}",
         child: new Image.network(
@@ -90,10 +98,10 @@ class HomePageItem extends StatelessWidget {
 
 
     final homeCardContent = new Container(
-      margin: new EdgeInsets.fromLTRB(horizontal ? 76.0 : 16.0, horizontal ? 16.0 : 42.0, 16.0, 16.0),
+      margin: new EdgeInsets.fromLTRB( 76.0 , 16.0, 16.0, 16.0),
       constraints: new BoxConstraints.expand(),
       child: new Column(
-        crossAxisAlignment: horizontal ? CrossAxisAlignment.center : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center ,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           new Text(liquorType.title, style: Theme.TextStyles.liquorTitle),
@@ -104,10 +112,9 @@ class HomePageItem extends StatelessWidget {
 
     final homeContent = new Container(
       child: homeCardContent,
-      height: horizontal ? 75.0 : 200.0,
-      margin: horizontal
-          ? new EdgeInsets.only(left: 46.0)
-          : new EdgeInsets.only(top: 10.0),
+      height:  75.0 ,
+      margin:
+           new EdgeInsets.only(left: 46.0),
       decoration: new BoxDecoration(
         color: Theme.Colors.appBarGradientEnd,
         shape: BoxShape.rectangle,
@@ -124,17 +131,15 @@ class HomePageItem extends StatelessWidget {
 
 
     return new GestureDetector(
-        onTap: horizontal
-            ? () => Navigator.of(context).push(
+        onTap:
+            () => Navigator.of(context).push(
           new PageRouteBuilder(
             pageBuilder: (_, __, ___) => new LiquorList(liquorType.title),
             transitionsBuilder: (context, animation, secondaryAnimation, child) =>
             new FadeTransition(opacity: animation, child: child),
           ) ,
-        )
-            : null,
+        ),
         child: new Container(
-
           margin: const EdgeInsets.symmetric(
             horizontal: 16.0,
           ),
@@ -147,6 +152,5 @@ class HomePageItem extends StatelessWidget {
         )
     );
   }
-
 
 }

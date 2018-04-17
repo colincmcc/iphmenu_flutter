@@ -41,6 +41,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<String> _liquorList;
+  String _submittedValidation = "";
 
   _updateLiquorList() async {
     final SharedPreferences prefs = await _prefs;
@@ -48,6 +49,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
 
     setState(() {
       _liquorList = prefs.setString("masterLiquorList", liquorList).then((bool success) {
+        _submittedValidation = "SUBMITTED!";
         return liquorList;
       });
     });
@@ -56,9 +58,11 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   @override
   void initState() {
     super.initState();
+
     _liquorList = _prefs.then((SharedPreferences prefs) {
       return (prefs.getString('masterLiquorList'));
     });
+
     _updateLiquorList();
   }
 
@@ -78,8 +82,9 @@ class LiquorFormFieldState extends State<LiquorFormField> {
     final FormState form = _formLiquorKey.currentState;
     form.save();
 
-    int lastIndex = (liquoritems.last.id != "") ? int.parse(liquoritems.last.id)+1 : 1;
+    int lastIndex = (liquoritems.first.id != "") ? int.parse(liquoritems.first.id)+1 : 1;
     String currentIndex = lastIndex.toString();
+    print(currentIndex);
 
     var formLiquorItem = new LiquorItem(
       id: currentIndex,
@@ -99,9 +104,8 @@ class LiquorFormFieldState extends State<LiquorFormField> {
     );
 
 
-    (liquoritems != null) ? liquoritems.insert(0, formLiquorItem) : null;
+    liquoritems.insert(0, formLiquorItem);
     _updateLiquorList();
-
 
   }
 
@@ -276,9 +280,13 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                   ),
                 ),
                 new Container(
+                    child: new Text(_submittedValidation)
+                ),
+                new Container(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: new Text('* indicates required field', style: Theme.of(context).textTheme.caption),
                 ),
+
               ],
             )
 
