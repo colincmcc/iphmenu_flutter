@@ -167,7 +167,13 @@ class LoginPageState extends State<LoginPage>{
     setState((){
       _validatorMessage = "Thank you!  The admin pin is set.";
       _step = 3;
-      _labelText = "Enter your pin: ";
+      Navigator.of(context).push(
+        new PageRouteBuilder(
+          pageBuilder: (_, __, ___) => new HomePageLiquor(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+          new FadeTransition(opacity: animation, child: child),
+        ) ,
+      );
       print("submit second");
 
     });

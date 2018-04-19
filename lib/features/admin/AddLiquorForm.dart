@@ -63,7 +63,6 @@ class LiquorFormFieldState extends State<LiquorFormField> {
       return (prefs.getString('masterLiquorList'));
     });
 
-    _updateLiquorList();
   }
 
   void showInSnackBar(String value) {

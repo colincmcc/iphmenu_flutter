@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:iphmenu/features/homepage/SharedPref.dart';
+import 'modal/LiquorItem.dart';
 import 'features/homepage/HomePageLiquor.dart';
 import 'package:iphmenu/Routes.dart';
 import 'modal/MenuModal.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'dart:convert';
 
 class MenuApp extends StatefulWidget {
   const MenuApp({Key key}) : super(key: key);
@@ -14,7 +15,27 @@ class MenuApp extends StatefulWidget {
 }
 
 class MenuAppState extends State<MenuApp> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  Future<String> _liquorList;
+  Future<bool> isAdmin;
   Widget home = new HomePageLiquor();
+
+  void initState() {
+    super.initState();
+    _updatePrefs();
+    print("main init");
+  }
+  _updatePrefs() async {
+    final SharedPreferences prefs = await _prefs;
+    final String liquorList = json.encode(liquoritems);
+
+    setState(() {
+      _liquorList = prefs.setString("masterLiquorList", liquorList).then((bool success) {
+        return liquorList;
+      });
+    });
+  }
+
   Widget build(BuildContext context) {
     final Map<String, WidgetBuilder> _kRoutes = <String, WidgetBuilder>{};
     for (LiquorType item in kAllLiquorTypeItems) {
@@ -25,6 +46,7 @@ class MenuAppState extends State<MenuApp> {
         return item.buildRoute(context);
       };
     }
+
 
     return new MaterialApp(
       title: "IPH Menu",

@@ -86,7 +86,7 @@ class AnimatedAppBar extends StatefulWidget{
 class AnimatedAppBarState extends State<AnimatedAppBar>{
   bool isSetup;
   bool isAdmin;
-  String _loginStatus = "not set";
+  String _loginStatus = "";
 
 
 
@@ -109,7 +109,7 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
   void _loginPage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState((){
-      isAdmin = prefs.getBool("isAdmin");
+      isAdmin = prefs.getBool("isAdmin") ?? false;
       print(isAdmin);
       if(isAdmin) {
         print("logging out");
@@ -137,8 +137,8 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
     isAdmin = prefs.getBool("isAdmin")  ?? false;
     print(isSetup);
     print(isAdmin);
-    setState(() {
 
+    setState(() {
       if(isSetup) {
         _loginStatus = "Login";
         print("login");
@@ -147,7 +147,7 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
         _loginStatus = "Logout";
         print("logout");
       }
-      if (isSetup = false) {
+      if (isSetup == false) {
         _loginStatus = "Setup Pin";
         print("setup pin");
       }

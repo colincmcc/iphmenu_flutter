@@ -29,7 +29,7 @@ class LiquorListState extends State<LiquorList>{
   void getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState((){
-      isAdmin = prefs.getBool("isAdmin");
+      isAdmin = prefs.getBool("isAdmin") ?? false;
       print("$isAdmin is admin");
     });
   }
@@ -37,6 +37,7 @@ class LiquorListState extends State<LiquorList>{
   @override
   void initState() {
     super.initState();
+
     _liquorList = _prefs.then((SharedPreferences prefs) {
       _liquorJson = prefs.getString('masterLiquorList');
       var data = json.decode(_liquorJson);
