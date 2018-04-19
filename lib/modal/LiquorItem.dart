@@ -54,54 +54,7 @@ class LiquorItem {
     this.description = json['description'];
 
   }
-
-   static LiquorItem getLiquorById(id) {
-     return liquoritems
-         .where((p) => p.id == id)
-         .first;
-   }
 }
-//List<LiquorItem> liquoritems = [];
-
-var defaultLiquorItem =
-  new LiquorItem(
-    id: " ",
-    type: " ",
-    distillery: " ",
-    name: " ",
-    price: r" ",
-    proof: " ",
-    age: " ",
-    style: " ",
-    bill: " ",
-    color: " ",
-    weblink: " ",
-    imglink: " ",
-    image: " ",
-    description: " ",
-
-
-  );
-
-final List<LiquorItem> liquoritems = [
-  new LiquorItem(
-      id: "1",
-      type: " ",
-      distillery: " ",
-      name: " ",
-      price: r" ",
-      proof: " ",
-      age: " ",
-      style: " ",
-      bill: " ",
-      color: " ",
-      weblink: " ",
-      imglink: " ",
-      image: " ",
-      description: " ",
-  ),
-
-];
 
 
 
