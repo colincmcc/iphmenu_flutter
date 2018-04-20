@@ -8,10 +8,11 @@ import 'features/homepage/HomePageLiquor.dart';
 
 
 class MenuApp extends StatefulWidget{
-  const MenuApp({Key key}): super(key: key);
 
   @override
-  MenuAppState createState() => new MenuAppState();
+  State createState(){
+    return new MenuAppState();
+  }
 }
 
 class MenuAppState extends State<MenuApp>{
@@ -20,12 +21,6 @@ class MenuAppState extends State<MenuApp>{
     final router = new Router();
     Routes.configureRoutes(router);
     Application.router = router;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
   }
 
   @override

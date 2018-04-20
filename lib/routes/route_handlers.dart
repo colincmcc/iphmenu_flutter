@@ -28,7 +28,7 @@ var loginHandler = new Handler(handlerFunc: (BuildContext context, Map<String, L
   String admin = params["setup"]?.first;
   String setup = params["admin"]?.first;
   String result = params["result"]?.first;
-  return new LoginPage(setup, admin, result);
+  return new LoginPage(setup, admin);
 });
 
 
@@ -40,11 +40,11 @@ var addLiquorHandler = new Handler(handlerFunc: (BuildContext context, Map<Strin
 var menuFunctionHandler = new Handler(
     type: HandlerType.function,
     handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      String message = params["message"]?.first;
+      String result = params["result"]?.first;
       showDialog(
         context: context,
         child: new AlertDialog(
-          content: new Text("$message"),
+          content: new Text("$result"),
           actions: <Widget>[
             new Padding(
               padding: new EdgeInsets.only(bottom: 8.0, right: 8.0),

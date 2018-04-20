@@ -12,10 +12,9 @@ import 'package:iphmenu/features/homepage/HomePageLiquor.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
 
 class LoginPage extends StatefulWidget{
-  LoginPage(setup, admin, result, {Key key}) : super(key: key);
+  LoginPage(setup, admin, {Key key}) : super(key: key);
   String setup;
   String admin;
-  String result;
 
   LoginPageState createState() => new LoginPageState();
 }

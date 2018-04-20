@@ -8,100 +8,94 @@ import 'package:iphmenu/features/common/AppBars.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LiquorList extends StatefulWidget{
-  const LiquorList(this.liquorType, {Key key}): super(key: key);
-  final String liquorType;
+  const LiquorList(this.type, {Key key}): super(key: key);
 
+  final String type;
 
   @override
   LiquorListState createState() => new LiquorListState();
+
 }
+class LiquorListState extends State<LiquorList> {
 
-class LiquorListState extends State<LiquorList>{
 
-
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Future<List> _liquorList;
-  String _liquorJson;
-  Future<bool> _isAdmin;
-  List<LiquorItem> storedLiquorByType;
-  bool isAdmin;
+  String liquorJson;
+  List<LiquorItem> liquorList;
+  bool isAdmin = false;
+  int _isLoading = 1;
+  var liquorscreen;
 
   void getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState((){
-      isAdmin = prefs.getBool("isAdmin") ?? false;
-      print("$isAdmin is admin");
-    });
+    isAdmin = prefs.getBool("isAdmin") ?? false;
+    liquorJson = prefs.getString(widget.type);
+    
+    if(liquorJson == null)
+      _isLoading = 3;
+    
+    var data = json.decode(liquorJson);
+    print("data is $data");
+    liquorList = (data as List).map((i) => new LiquorItem.fromJson(i)).toList();
+    
+    if(liquorList != null) 
+      _isLoading = 2;
   }
 
   @override
   void initState() {
+    print(widget.type);
     super.initState();
-
-    _liquorList = _prefs.then((SharedPreferences prefs) {
-      _liquorJson = prefs.getString('masterLiquorList');
-      var data = json.decode(_liquorJson);
-      final storedLiquorItems = (data as List).map((i) => new LiquorItem.fromJson(i)) ;
-
-      storedLiquorByType = storedLiquorItems.where((
-          LiquorItem liquoritem) => liquoritem.type.contains(widget.liquorType))
-          .toList();
-      return storedLiquorByType;
-    });
     getSharedPrefs();
+    print("$isAdmin is admin");
   }
 
   @override
   Widget build(BuildContext context) {
+    switch (_isLoading) {
+      case 1:
+        return new CircularProgressIndicator();
+      case 2:
+        return _liquorPageContent();
+      case 3:
+        return new Center(
+          child: new Text("Please add more!"),
+        );
+    }
+  }
+
+  _liquorPageContent() {
+    void dismissLiquor(index) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      setState(() {
+        (liquorList.length >= 1) ? liquorList.removeAt(index) : null;
+        liquorJson = json.encode(liquorList);
+        prefs.setString("masterLiquorList", liquorJson).then((bool success) {
+          print("success");
+        });
+      });
+    }
+
     return new Scaffold(
-      appBar: new PreferredSize(child: new GradientAppBar(widget.liquorType), preferredSize: const Size.fromHeight(48.0)),
-      body: new Column(
-        children: <Widget>[
-          //_getLiquorContent(widget.liquorType),
-          new FutureBuilder<List>(
-              future: _liquorList,
-              builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return const CircularProgressIndicator();
-                  default:
-                    if (snapshot.hasError)
-                      return new Text('Error: ${snapshot.error}');
-                    else
-                      return new Container(
-                        child: _getStoredLiquorContent(snapshot.data),
-                      );
-                }
+      backgroundColor: Theme.Colors.appBarGradientStart,
+      appBar: new PreferredSize(child: new GradientAppBar(widget.type.toUpperCase()), preferredSize: const Size.fromHeight(48.0)),
+      body: new Container(
+        child: new ListView.builder(
+          itemCount: liquorList.length,
+              itemBuilder: (context, index) {
+                return new LiquorSummary(liquorList[index]);
               }
           )
-        ],
       ),
     );
 
 
   }
-
+}
+/*
   _getStoredLiquorContent(List _liquorList) {
 
-    void dismissLiquor(index) async {
-      final SharedPreferences prefs = await _prefs;
 
-      setState(() {
-
-        String _liquorId = this.storedLiquorByType[index].id;
-        print (_liquorId);
-        print(index);
-
-        this.storedLiquorByType.removeAt(index);
-
-        (liquoritems.length >= 1) ? liquoritems.removeWhere((item) => item.id == _liquorId) : null;
-        _liquorJson = json.encode(liquoritems);
-        prefs.setString("masterLiquorList", _liquorJson).then((
-            bool success) {
-          print("success");
-        });
-      });
-    }
 
     return new Expanded(
       child: new Container(
@@ -135,7 +129,7 @@ class LiquorListState extends State<LiquorList>{
   }
 }
 
-/*
+
 
 new Container(
             color: Theme.Colors.appBarGradientStart,

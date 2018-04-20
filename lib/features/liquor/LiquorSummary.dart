@@ -3,6 +3,7 @@ import 'dart:convert'
 ;
 import 'package:flutter/material.dart';
 
+import 'package:fluro/fluro.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:iphmenu/features/liquor/LiquorListPage.dart';
@@ -10,6 +11,7 @@ import 'package:iphmenu/modal/LiquorItem.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
 import 'package:iphmenu/features/common/objects.dart';
 import 'package:iphmenu/features/liquorDetail/LiquorDetailBody.dart';
+import 'package:iphmenu/routes/application.dart';
 /*
 class LiquorCard extends StatefulWidget{
   final LiquorItem liquoritem;
@@ -223,7 +225,6 @@ class LiquorSummary extends StatelessWidget {
     // in case there are duplicate items
     // Todo make sure all items have unique id, switch to Set()
     
-    int currentIndex = liquoritems.indexOf(liquoritem);
 
     final liquorThumbnail = new Container(
       margin: new EdgeInsets.symmetric(
@@ -231,7 +232,7 @@ class LiquorSummary extends StatelessWidget {
       ),
       alignment: horizontal ? FractionalOffset.centerLeft : FractionalOffset.center,
       child: new Hero(
-        tag: "liquor-hero-${liquoritem.id}-${currentIndex}",
+        tag: "liquor-hero-${liquoritem.id}",
         child: new Image.network(
           liquoritem.imglink,
           height: 92.0,
@@ -321,15 +322,7 @@ class LiquorSummary extends StatelessWidget {
 
 
     return new GestureDetector(
-        onTap: horizontal
-            ? () => Navigator.of(context).push(
-          new PageRouteBuilder(
-            pageBuilder: (_, __, ___) => new LiquorDetailBody(liquoritem),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            new FadeTransition(opacity: animation, child: child),
-          ) ,
-        )
-            : null,
+        onTap:  null,
         child: new Container(
           margin: const EdgeInsets.symmetric(
             vertical: 16.0,

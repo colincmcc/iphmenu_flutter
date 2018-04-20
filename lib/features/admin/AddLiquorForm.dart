@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,31 +38,47 @@ class LiquorData {
 class LiquorFormFieldState extends State<LiquorFormField> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   LiquorData liquor = new LiquorData();
-
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Future<String> _liquorList;
+  List<LiquorItem> liquorList = [];
   String _submittedValidation = "";
+  final Random _random = new Random();
 
-  _updateLiquorList() async {
-    final SharedPreferences prefs = await _prefs;
-    final String liquorList = json.encode(liquoritems);
 
-    setState(() {
-      _liquorList = prefs.setString("masterLiquorList", liquorList).then((bool success) {
-        _submittedValidation = "SUBMITTED!";
-        return liquorList;
+
+  _updateLiquorList(formLiquorItem) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String liquorJson = prefs.getString(liquor.type);
+
+    if(liquorJson == null){
+      liquorList.insert(0, formLiquorItem);
+      setState(() {
+        String _submittedLiquorJson = json.encode(liquorList);
+        prefs.setString(liquor.type, _submittedLiquorJson).then((bool success) {
+          _submittedValidation = "SUBMITTED!";
+          print("liquor json was null $_submittedLiquorJson");
+        });
       });
-    });
+    } else {
+      var data = json.decode(liquorJson);
+      setState(() {
+        liquorList = (data as List).map((i) => new LiquorItem.fromJson(i)).toList();
+        print("liquorlist is $liquorList");
+        liquorList.insert(0, formLiquorItem);
+        String _submittedLiquorJson = json.encode(liquorList);
+        prefs.setString(liquor.type, _submittedLiquorJson).then((bool success) {
+          _submittedValidation = "SUBMITTED!";
+          print("liquor json not null $_submittedLiquorJson");
+        });
+      });
+    }
+
   }
 
   @override
   void initState() {
     super.initState();
-
-    _liquorList = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getString('masterLiquorList'));
-    });
 
   }
 
@@ -77,16 +94,14 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   final GlobalKey<FormFieldState<String>> _passwordFieldKey = new GlobalKey<FormFieldState<String>>();
 
 
-  void _handleSubmitted() {
+  void _handleSubmitted() async {
     final FormState form = _formLiquorKey.currentState;
     form.save();
-
-    int lastIndex = (liquoritems.first.id != "") ? int.parse(liquoritems.first.id)+1 : 1;
-    String currentIndex = lastIndex.toString();
-    print(currentIndex);
+    String _randomId = _random.nextInt(1000).toString();
+    print(_randomId);
 
     var formLiquorItem = new LiquorItem(
-      id: currentIndex,
+      id: _randomId,
       type: liquor.type,
       distillery: liquor.distillery,
       name: liquor.name,
@@ -103,8 +118,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
     );
 
 
-    liquoritems.insert(0, formLiquorItem);
-    _updateLiquorList();
+    _updateLiquorList(formLiquorItem);
 
   }
 
@@ -159,7 +173,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                   onSaved: (String value) { liquor.name = value; },
                 ),
                 new TextFormField(
-                  initialValue: "Tequila",
+                  initialValue: "tequila",
                   decoration: const InputDecoration(
                     hintText: 'What do people call you?',
                     labelText: 'Type',

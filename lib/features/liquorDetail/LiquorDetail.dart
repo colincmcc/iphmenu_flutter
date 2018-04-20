@@ -7,8 +7,7 @@ class LiquorDetail extends StatelessWidget {
 
   final LiquorItem liquoritem;
 
-  LiquorDetail(String id) :
-        liquoritem = LiquorItem.getLiquorById(id);
+  LiquorDetail(String id);
 
 
 

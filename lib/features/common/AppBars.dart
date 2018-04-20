@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:iphmenu/Theme.dart' as Theme;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluro/fluro.dart';
 
+import 'package:iphmenu/routes/application.dart';
 import 'package:iphmenu/features/admin/AddLiquorForm.dart';
 import 'package:iphmenu/features/admin/LoginPage.dart';
+import 'package:iphmenu/Theme.dart' as Theme;
 
-final double _kFlexibleSpaceMaxHeight = 256.0;
+
 final String _kSmallLogoImage = 'assets/img/lightbulb_solo.png';
 final double _kAppBarHeight = 150.0;
-final double _kFabHalfSize = 28.0; // TODO(mpcomplete): needs to adapt to screen size
-final double _kLiquorPageMaxWidth = 500.0;
+
 
 class GradientAppBar extends StatelessWidget {
   final String title;
@@ -29,7 +30,7 @@ class GradientAppBar extends StatelessWidget {
         .top;
     return new Container(
       padding: new EdgeInsets.only(top: statusBarHeight),
-      height: statusBarHeight +barHeight,
+      height: statusBarHeight + barHeight,
       decoration: new BoxDecoration(
         gradient: new LinearGradient(
           colors: [
@@ -51,6 +52,7 @@ class GradientAppBar extends StatelessWidget {
               color: Theme.Colors.liquorTitle
           )
         ),
+        // todo Theme: set from theme
         new Text(
           title,
           style: const TextStyle(
@@ -75,89 +77,76 @@ enum AppbarAction {
   addliquor
 }
 class AnimatedAppBar extends StatefulWidget{
-  AnimatedAppBar(this.context, this.pageTitle);
+  AnimatedAppBar(this.context, this.pageTitle, this.isSetup, this.isAdmin);
+
   final BuildContext context;
   final String pageTitle;
+  bool isSetup;
+  bool isAdmin;
 
   AnimatedAppBarState createState() => new AnimatedAppBarState();
 }
 
 
 class AnimatedAppBarState extends State<AnimatedAppBar>{
-  bool isSetup;
-  bool isAdmin;
+
   String _loginStatus = "";
 
-
-
   void _addLiquor() {
-    print("add liquor isadmin $isAdmin");
-    if(isAdmin) {
-        Navigator.of(widget.context).push(
-          new PageRouteBuilder(
-            pageBuilder: (_, __, ___) => new LiquorFormField(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            new FadeTransition(opacity: animation, child: child),
-          ) ,
-        );
+    print("add liquor isadmin $widget.isAdmin");
+    if(widget.isAdmin) {
+      Application.router.navigateTo(
+        context,
+        "/admin/addLiquor",
+        transition: TransitionType.native,
+      );
       }
-      else
-        print("not admin");
+      else {
+      String message = "Please Login!";
+      Application.router.navigateTo(
+        context,
+        "/function?result=$message",
+        transition: TransitionType.native,
+      );
+    }
   }
 
 
   void _loginPage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState((){
-      isAdmin = prefs.getBool("isAdmin") ?? false;
-      print(isAdmin);
-      if(isAdmin) {
+
+    if(widget.isAdmin){
+      setState((){
         print("logging out");
+        widget.isAdmin = false;
         prefs.setBool("isAdmin", false);
-        isAdmin = prefs.getBool("isAdmin");
         _loginStatus = "Login";
-        }
+      });
 
-      else {
-        Navigator.of(widget.context).push(
-          new PageRouteBuilder(
-            pageBuilder: (_, __, ___) => new LoginPage(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-            new FadeTransition(opacity: animation, child: child),
-          ) ,
-        );
+    }
+    else {
+      Application.router.navigateTo(
+        context,
+        "/admin/login?setup=${widget.isSetup}&admin=${widget.isAdmin}",
+        transition: TransitionType.native,
+      );
       }
-    });
-    print(isAdmin);
+    print(widget.isAdmin);
 
-  }
-  Future<Null> getSharedPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    isSetup = prefs.getBool("isSetup") ?? false;
-    isAdmin = prefs.getBool("isAdmin")  ?? false;
-    print(isSetup);
-    print(isAdmin);
-
-    setState(() {
-      if(isSetup) {
-        _loginStatus = "Login";
-        print("login");
-      }
-      if(isAdmin) {
-        _loginStatus = "Logout";
-        print("logout");
-      }
-      if (isSetup == false) {
-        _loginStatus = "Setup Pin";
-        print("setup pin");
-      }
-    });
   }
 
   @override
   void initState() {
     super.initState();
-    getSharedPrefs();
+    if(widget.isSetup && widget.isAdmin){
+      _loginStatus = "Logout";
+    }
+    else if(widget.isSetup){
+      _loginStatus = "Login";
+    }
+    else{
+      _loginStatus = "Setup Pin";
+    }
   }
 
   @override
