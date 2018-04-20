@@ -38,12 +38,15 @@ class LiquorData {
 class LiquorFormFieldState extends State<LiquorFormField> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+  final GlobalKey<FormFieldState<String>> _typeFieldKey = new GlobalKey<FormFieldState<String>>();
+  TextEditingController _textController;
   LiquorData liquor = new LiquorData();
   List<LiquorItem> liquorList = [];
   String _submittedValidation = "";
   final Random _random = new Random();
   List<String> liquorTypes = [];
+
+  String typeFieldText = "";
 
 
 
@@ -149,11 +152,16 @@ class LiquorFormFieldState extends State<LiquorFormField> {
     });
 
   }
+  _updateType(){
+    setState((){
 
+    });
+  }
   @override
   void initState() {
     super.initState();
     _getLiquorTypes();
+    _textController.addListener(_updateType);
   }
 
   @override
@@ -180,15 +188,22 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                   ),
                   onSaved: (String value) { liquor.name = value; },
                 ),
-                new TextFormField(
-                  initialValue: "tequila",
-                  decoration: const InputDecoration(
-                    hintText: 'What style of liquor is it?',
-                    labelText: 'Type',
-                  ),
-                  onSaved: (String value) { liquor.type = value.toLowerCase(); },
+            new Row(
+              children: <Widget>[
+                new Expanded(
+                  child: new TextFormField(
+                    controller: _textController,
+                    key: _typeFieldKey,
+                    initialValue: typeFieldText,
+                    decoration: const InputDecoration(
+                      hintText: 'What style of liquor is it?',
+                      labelText: 'Type',
+                    ),
+                    onSaved: (String value) { liquor.type = value.toLowerCase(); },
+                  )
                 ),
-                new DropdownButton<String>(
+                new Expanded(
+                  child: new DropdownButton<String>(
                     items: liquorTypes
                         .map((String value) {
                       return new DropdownMenuItem<String>(
@@ -197,8 +212,18 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                       );
                     }
                     ).toList(),
-                    onChanged: null,
+                    onChanged: (String value){
+                      setState((){
+                        setState((){
+                          typeFieldText = value;
+                          _textController.clear();
+                        });
+                      });
+                    },
+                  ),
                 ),
+              ],
+            ),
                 new TextFormField(
                   initialValue: "Clase Azul",
                   decoration: const InputDecoration(

@@ -96,7 +96,7 @@ class LiquorListState extends State<LiquorList> {
               itemBuilder: (context, index) {
                 if(isAdmin){
                   return new Dismissible(
-                      key: new ObjectKey(LiquorSummary(liquorList[index])),
+                      key: new ObjectKey(liquorList[index]),
                       child: new LiquorSummary(liquorList[index]),
                       onDismissed: (DismissDirection direction) {
                         dismissLiquor(index);
