@@ -72,29 +72,30 @@ class GradientAppBar extends StatelessWidget {
     );
   }
 }
+
 enum AppbarAction {
   login,
   addliquor
 }
+
 class AnimatedAppBar extends StatefulWidget{
-  AnimatedAppBar(this.context, this.pageTitle, this.isSetup, this.isAdmin);
+  AnimatedAppBar(this.context, this.pageTitle);
 
   final BuildContext context;
   final String pageTitle;
-  bool isSetup;
-  bool isAdmin;
 
   AnimatedAppBarState createState() => new AnimatedAppBarState();
 }
 
 
 class AnimatedAppBarState extends State<AnimatedAppBar>{
-
+  bool _isSetup;
+  bool _isAdmin;
   String _loginStatus = "";
 
   void _addLiquor() {
-    print("add liquor isadmin $widget.isAdmin");
-    if(widget.isAdmin) {
+    print("add liquor isadmin $_isAdmin");
+    if(_isAdmin) {
       Application.router.navigateTo(
         context,
         "/admin/addLiquor",
@@ -115,10 +116,10 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
   void _loginPage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if(widget.isAdmin){
+    if(_isAdmin){
       setState((){
         print("logging out");
-        widget.isAdmin = false;
+        _isAdmin = false;
         prefs.setBool("isAdmin", false);
         _loginStatus = "Login";
       });
@@ -127,26 +128,43 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
     else {
       Application.router.navigateTo(
         context,
-        "/admin/login?setup=${widget.isSetup}&admin=${widget.isAdmin}",
+        "/admin/login?setup=${_isSetup}&admin=${_isAdmin}",
         transition: TransitionType.native,
       );
       }
-    print(widget.isAdmin);
+    print(_isAdmin);
+
+  }
+
+  _setStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _isSetup = prefs.getBool("isSetup") ?? false;
+      _isAdmin = prefs.getBool("isAdmin") ?? false;
+      if(_isSetup && _isAdmin){
+        _loginStatus = "Logout";
+        print("logout");
+      }
+      else if(_isSetup && _isAdmin == false){
+        _loginStatus = "Login";
+        print("login");
+      }
+      else{
+        _loginStatus = "Setup Pin";
+        print("issetup loginstatus ${_isSetup}");
+        print("isadmin loginstatus ${_isAdmin}");
+
+        print("setuppin");
+      }
+    });
 
   }
 
   @override
   void initState() {
     super.initState();
-    if(widget.isSetup && widget.isAdmin){
-      _loginStatus = "Logout";
-    }
-    else if(widget.isSetup){
-      _loginStatus = "Login";
-    }
-    else{
-      _loginStatus = "Setup Pin";
-    }
+    _setStatus();
   }
 
   @override

@@ -27,18 +27,29 @@ class LiquorListState extends State<LiquorList> {
 
   void getSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isAdmin = prefs.getBool("isAdmin") ?? false;
+    setState(() {
+      isAdmin = prefs.getBool("isAdmin") ?? false;
+    });
     liquorJson = prefs.getString(widget.type);
     
-    if(liquorJson == null)
-      _isLoading = 3;
+    if(liquorJson == null) {
+      setState(() {
+        _isLoading = 3;
+      });
+      print("liquorjson is null, load 3");
+
+    }
     
     var data = json.decode(liquorJson);
     print("data is $data");
     liquorList = (data as List).map((i) => new LiquorItem.fromJson(i)).toList();
     
-    if(liquorList != null) 
-      _isLoading = 2;
+    if(liquorList != null) {
+      setState(() {
+        _isLoading = 2;
+      });
+      print("liquorlist is not null, load 2");
+    }
   }
 
   @override
@@ -68,9 +79,9 @@ class LiquorListState extends State<LiquorList> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       setState(() {
-        (liquorList.length >= 1) ? liquorList.removeAt(index) : null;
+        liquorList.removeAt(index);
         liquorJson = json.encode(liquorList);
-        prefs.setString("masterLiquorList", liquorJson).then((bool success) {
+        prefs.setString(widget.type, liquorJson).then((bool success) {
           print("success");
         });
       });
@@ -83,7 +94,17 @@ class LiquorListState extends State<LiquorList> {
         child: new ListView.builder(
           itemCount: liquorList.length,
               itemBuilder: (context, index) {
-                return new LiquorSummary(liquorList[index]);
+                if(isAdmin){
+                  return new Dismissible(
+                      key: new ObjectKey(LiquorSummary(liquorList[index])),
+                      child: new LiquorSummary(liquorList[index]),
+                      onDismissed: (DismissDirection direction) {
+                        dismissLiquor(index);
+                        },
+                );
+                } else {
+                  return new LiquorSummary(liquorList[index]);
+                }
               }
           )
       ),

@@ -26,7 +26,6 @@ class LoginPageState extends State<LoginPage>{
   var loginScreen;
 
   final GlobalKey<FormState> _formAdminKey = new GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _formScaffoldKey = new GlobalKey<ScaffoldState>();
 
   // Load initial value of isSetup and determine page layout based on value
   @override
@@ -75,7 +74,6 @@ class LoginPageState extends State<LoginPage>{
       content: new Text('Pin is set to $adminPin'),
     );
 
-    _formScaffoldKey.currentState.showSnackBar(snackbar);
     /*
     final SharedPreferences prefs = await _prefs;
     setState(() {

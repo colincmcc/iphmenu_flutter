@@ -266,7 +266,7 @@ class LiquorSummary extends StatelessWidget {
             new Container(height: 4.0,),
             new Text(liquoritem.name, style: Theme.TextStyles.liquorTitle),
             new Container(height: 10.0),
-            new Text(liquoritem.type, style: Theme.TextStyles.liquorType),
+            new Text(liquoritem.type.toUpperCase(), style: Theme.TextStyles.liquorType),
             new Separator(),
             new Row(
               mainAxisAlignment: horizontal ? MainAxisAlignment.start : MainAxisAlignment.center,
@@ -322,7 +322,15 @@ class LiquorSummary extends StatelessWidget {
 
 
     return new GestureDetector(
-        onTap:  null,
+        onTap:   horizontal
+            ? () => Navigator.of(context).push(
+          new PageRouteBuilder(
+            pageBuilder: (_, __, ___) => new LiquorDetailBody(liquoritem),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            new FadeTransition(opacity: animation, child: child),
+          ) ,
+        )
+            : null,
         child: new Container(
           margin: const EdgeInsets.symmetric(
             vertical: 16.0,

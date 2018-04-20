@@ -22,23 +22,12 @@ class HomePageLiquor extends StatefulWidget {
 }
 
 class HomePageLiquorState extends State<HomePageLiquor>{
-  static final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  bool isAdmin = false;
-  bool isSetup = false;
 
-  void _getSharedPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    isAdmin = prefs.getBool("isAdmin") ?? false;
-    isSetup = prefs.getBool("isSetup") ?? false;
-  }
 
   @override
   void initState() {
     super.initState();
-    _getSharedPrefs();
-    print(isSetup);
-    print(isAdmin);
   }
 
   @override
@@ -53,7 +42,7 @@ class HomePageLiquorState extends State<HomePageLiquor>{
       menuButton(context, "Cocktails", "cocktails"),
     ];
     _getHomeContent(){
-      return new Container(
+       return new Container(
           child: new SliverPadding(
               padding: const EdgeInsets.symmetric(vertical: 24.0),
               sliver: new SliverToBoxAdapter(
@@ -64,12 +53,12 @@ class HomePageLiquorState extends State<HomePageLiquor>{
           )
       );
     }
+
     Widget home = new Scaffold(
         backgroundColor: Theme.Colors.appBarGradientStart,
-        key: _scaffoldKey,
         body: new CustomScrollView(
             slivers: <Widget>[
-              new AnimatedAppBar(context, "IPH EXECUTIVE", isAdmin, isSetup),
+              new AnimatedAppBar(context, "IPH EXECUTIVE"),
               _getHomeContent()
             ],
         )
