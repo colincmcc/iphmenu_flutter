@@ -26,30 +26,7 @@ class LiquorDetailBody extends StatelessWidget {
       ),
     );
   }
-/*
-  @override
-  Widget build(BuildContext context) {
-    return new Stack(
-        children: <Widget>[
-          new Container(
-            color: Theme.Colors.liquorPageBackground,
-            child: new Center(
-              child: new Hero(
-                tag: 'liquor-icon-${liquoritem.id}',
-                child: new Stack (
-                    children: <Widget>[
-                    _getBackground(),
-                _getGradient(),
-                _getContent(),
-                ]
-                ),
-              ),
-            ),
-          ),
-        ]
-    );
-  }
-  */
+
   Container _getBackground(){
     return new Container(
       child: new Image.network(liquoritem.image,

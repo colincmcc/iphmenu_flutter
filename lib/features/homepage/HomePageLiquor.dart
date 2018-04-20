@@ -22,12 +22,21 @@ class HomePageLiquor extends StatefulWidget {
 }
 
 class HomePageLiquorState extends State<HomePageLiquor>{
+    List<String> _liquortypes = ["bourbon", "imported", "tequila", "rum", "spirits", "beer", "cocktails"];
 
+  _getLiquorTypes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-
+    setState(() {
+      prefs.setStringList("liquorTypes", _liquortypes);
+      List<String> _liquortypesstored = prefs.getStringList("liquorTypes");
+      print(_liquortypesstored);
+    });
+  }
   @override
   void initState() {
     super.initState();
+    _getLiquorTypes();
   }
 
   @override

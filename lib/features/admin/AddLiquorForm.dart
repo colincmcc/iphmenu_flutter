@@ -43,6 +43,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   List<LiquorItem> liquorList = [];
   String _submittedValidation = "";
   final Random _random = new Random();
+  List<String> liquorTypes = [];
 
 
 
@@ -73,12 +74,6 @@ class LiquorFormFieldState extends State<LiquorFormField> {
         });
       });
     }
-
-  }
-
-  @override
-  void initState() {
-    super.initState();
 
   }
 
@@ -146,6 +141,20 @@ class LiquorFormFieldState extends State<LiquorFormField> {
       ),
     ) ?? false;
   }
+  void _getLiquorTypes() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      liquorTypes = prefs.getStringList("liquorTypes");
+      print(liquorTypes);
+    });
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getLiquorTypes();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -166,8 +175,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                 new TextFormField(
                   initialValue: "Clase Azul",
                   decoration: const InputDecoration(
-                    icon: const Icon(Icons.person),
-                    hintText: 'What do people call you?',
+                    hintText: 'Name of Liquor',
                     labelText: 'Name *',
                   ),
                   onSaved: (String value) { liquor.name = value; },
@@ -175,16 +183,27 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                 new TextFormField(
                   initialValue: "tequila",
                   decoration: const InputDecoration(
-                    hintText: 'What do people call you?',
+                    hintText: 'What style of liquor is it?',
                     labelText: 'Type',
                   ),
-                  onSaved: (String value) { liquor.type = value; },
+                  onSaved: (String value) { liquor.type = value.toLowerCase(); },
+                ),
+                new DropdownButton<String>(
+                    items: liquorTypes
+                        .map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }
+                    ).toList(),
+                    onChanged: null,
                 ),
                 new TextFormField(
                   initialValue: "Clase Azul",
                   decoration: const InputDecoration(
                     icon: const Icon(Icons.person),
-                    hintText: 'What do people call you?',
+                    hintText: 'Who makes this?',
                     labelText: 'Distillery/Brewery',
                   ),
                   onSaved: (String value) { liquor.distillery = value; },
@@ -192,8 +211,8 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                 new TextFormField(
                   initialValue: "https://www.claseazul.com/img/clase-azul-family/plata/tequila-anejo.png",
                   decoration: const InputDecoration(
-                    hintText: 'Where can we reach you?',
-                    labelText: 'Logo',
+                    hintText: 'Picture of bottle / company logo / etc',
+                    labelText: 'Small logo link',
                   ),
                   keyboardType: TextInputType.url,
                   onSaved: (String value) { liquor.imglink = value; },
@@ -201,8 +220,8 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                 new TextFormField(
                   initialValue: "http://i2.cdn.turner.com/money/dam/assets/170703142445-clase-azul-780x439.jpg",
                   decoration: const InputDecoration(
-                    hintText: 'Where can we reach you?',
-                    labelText: 'Background',
+                    hintText: 'Large background image link',
+                    labelText: 'Background image',
                   ),
                   keyboardType: TextInputType.url,
                   onSaved: (String value) { liquor.image = value; },
@@ -211,7 +230,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                   initialValue: "https://www.claseazul.com",
                   decoration: const InputDecoration(
                     icon: const Icon(Icons.web),
-                    hintText: 'Your email address',
+                    hintText: 'Link to company or liquor website',
                     labelText: 'Website',
                   ),
                   keyboardType: TextInputType.url,
@@ -220,8 +239,8 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                 new TextFormField(
                   initialValue: "Clase Azul Añejo “Edición Indígena-Mazahua” (Mazahua Edition) is an ultra- premium añejo tequila made from Tequilana Weber Blue Agave. Its intense amber color and layered aromas are a result of an extended period of aging.",
                   decoration: const InputDecoration(
-                    hintText: 'Tell us about yourself',
-                    helperText: 'Keep it short, this is just a demo',
+                    hintText: 'Tell us about the liquor',
+                    helperText: 'Keep it short',
                     labelText: 'About',
                   ),
                   onSaved: (String value) { liquor.description = value; },
@@ -229,7 +248,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                 ),
                 new TextFormField(
                   initialValue: "34",
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                       labelText: 'Price',
                       prefixText: '\$',
@@ -240,7 +259,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                 ),
                 new TextFormField(
                   initialValue: "110",
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
                     labelText: 'Proof',
                   ),
@@ -252,6 +271,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     labelText: 'Age',
+                    helperText: 'Please specify if years/months',
                   ),
                   onSaved: (String value) { liquor.age = value; },
                   maxLines: 1,
@@ -260,7 +280,8 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                   initialValue: "Tequila",
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
-                    labelText: 'Style',
+                    labelText: 'Substyle',
+                    hintText: 'Stout / Barrel Aged / etc.',
                   ),
                   onSaved: (String value) { liquor.style = value; },
                   maxLines: 1,
@@ -269,7 +290,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                   initialValue: "TASTE: Cooked agave flavors with touches of vanilla, caramel, and various woods through the finish.",
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
-                    labelText: 'Bill',
+                    labelText: 'Bill/Tasting Notes',
                   ),
                   onSaved: (String value) { liquor.bill = value; },
                   maxLines: 1,
