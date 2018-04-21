@@ -22,48 +22,104 @@ class HomePageLiquor extends StatefulWidget {
 }
 
 class HomePageLiquorState extends State<HomePageLiquor>{
-    List<String> _liquortypes = ["bourbon", "imported", "tequila", "rum", "spirits", "beer", "cocktails"];
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
+  List<String> _liquorTypes = [];
+    int _isLoading = 1;
+    List<Widget> menuWidgets;
+
+    Future<Null> _handleRefresh() {
+    final Completer<Null> completer = new Completer<Null>();
+    new Timer(const Duration(seconds: 3), () { completer.complete(null); });
+    return completer.future.then((_) {
+      _getLiquorTypes();
+      _scaffoldKey.currentState?.showSnackBar(new SnackBar(
+          content: const Text('Liquor Updated!'),
+          action: new SnackBarAction(
+              label: 'RETRY',
+              onPressed: () {
+                _refreshIndicatorKey.currentState.show();
+              }
+          )
+      ));
+    });
+  }
   _getLiquorTypes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      prefs.setStringList("liquorTypes", _liquortypes);
-      List<String> _liquortypesstored = prefs.getStringList("liquorTypes");
-      print(_liquortypesstored);
+      _liquorTypes = prefs.getStringList("liquorTypes");
+      print(_liquorTypes);
+      if(_liquorTypes != null) {
+        menuWidgets = _liquorTypes.map((String _liquor) =>
+            menuButton(context, _liquor.toUpperCase(), _liquor)
+        ).toList();
+        _isLoading = 2;
+        print("isloading 2");
+      }
+      else {
+        _isLoading = 3;
+        print("isloading 3");
+      }
+      print(menuWidgets);
+
     });
   }
   @override
   void initState() {
     super.initState();
     _getLiquorTypes();
+
   }
 
   @override
   Widget build(BuildContext context) {
-    var menuWidgets = <Widget>[
-      menuButton(context, "Bourbon", "bourbon"),
-      menuButton(context, "Imported Whiskey", "imported"),
-      menuButton(context, "Tequila", "tequila"),
-      menuButton(context, "Rum", "rum"),
-      menuButton(context, "Spirits", "spirits"),
-      menuButton(context, "Beer", "beer"),
-      menuButton(context, "Cocktails", "cocktails"),
-    ];
-    _getHomeContent(){
-       return new Container(
-          child: new SliverPadding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0),
-              sliver: new SliverToBoxAdapter(
-                child: new Column(
-                  children: menuWidgets,
-                ),
-              )
-          )
-      );
-    }
 
+    _getHomeContent(){
+      switch (_isLoading) {
+        case 1:
+          return new SliverToBoxAdapter(
+              child: new Center(
+                  child: new CircularProgressIndicator()
+              )
+          );
+        case 2:
+          return new Container(
+              child: new SliverPadding(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  sliver: new SliverToBoxAdapter(
+                    child: new Column(
+                      children: menuWidgets,
+                    ),
+                  )
+              )
+          );
+        case 3:
+          return new SliverToBoxAdapter(
+            child: new Center(
+              child: new Text("Please add menu items with the Add Liquor page!"),
+            ),
+          );
+      }
+    }
     Widget home = new Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Theme.Colors.appBarGradientStart,
+        body: new RefreshIndicator(
+          key: _refreshIndicatorKey,
+            child: new CustomScrollView(
+              slivers: <Widget>[
+                new AnimatedAppBar(context, "IPH EXECUTIVE"),
+                _getHomeContent()
+              ],
+            ),
+            onRefresh: _handleRefresh)
+
+    );
+    /*
+    Widget home = new Scaffold(
+      key: _scaffoldKey,
         backgroundColor: Theme.Colors.appBarGradientStart,
         body: new CustomScrollView(
             slivers: <Widget>[
@@ -71,9 +127,7 @@ class HomePageLiquorState extends State<HomePageLiquor>{
               _getHomeContent()
             ],
         )
-    );
-
-
+    ); */
     return home;
   }
 

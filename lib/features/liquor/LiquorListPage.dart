@@ -21,6 +21,7 @@ class LiquorListState extends State<LiquorList> {
 
   String liquorJson;
   List<LiquorItem> liquorList;
+  List<String> _liquorTypes = [];
   bool isAdmin = false;
   int _isLoading = 1;
   var liquorscreen;
@@ -80,10 +81,20 @@ class LiquorListState extends State<LiquorList> {
 
       setState(() {
         liquorList.removeAt(index);
-        liquorJson = json.encode(liquorList);
-        prefs.setString(widget.type, liquorJson).then((bool success) {
-          print("success");
-        });
+        print (liquorList.length);
+        if(liquorList.length < 1) {
+          prefs.remove(widget.type);
+          _liquorTypes.addAll(prefs.getStringList("liquorTypes"));
+          _liquorTypes.remove(widget.type);
+          prefs.setStringList("liquorTypes",_liquorTypes);
+        }
+        else{
+          liquorJson = json.encode(liquorList);
+          prefs.setString(widget.type, liquorJson).then((bool success) {
+            print("success");
+          });
+        }
+
       });
     }
 

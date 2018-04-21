@@ -38,16 +38,17 @@ class LiquorData {
 
 class LiquorFormFieldState extends State<LiquorFormField> {
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GlobalKey<FormFieldState<String>> _typeFieldKey = new GlobalKey<FormFieldState<String>>();
   TextEditingController _textController = new TextEditingController();
   LiquorData liquor = new LiquorData();
   List<LiquorItem> liquorList = [];
   String _submittedValidation = "";
   final Random _random = new Random();
-  List<String> liquorTypes = [];
+  List<String> _liquorTypes = [];
+  List<String> _submittedLiquorTypes =[];
   List dropDownFields = [];
-  bool _visible = false;
+  bool _visible = true;
+  String dropDownValue;
+
 
 
 
@@ -55,19 +56,19 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   _updateLiquorList(formLiquorItem) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String liquorJson = prefs.getString(liquor.type);
-
-    if(liquorJson == null){
+    String _liquorJson = prefs.getString(liquor.type);
+    print("liquorJson is $_liquorJson");
+    if(_liquorJson == null){
       liquorList.insert(0, formLiquorItem);
       setState(() {
-        String _submittedLiquorJson = json.encode(liquorList);
-        prefs.setString(liquor.type, _submittedLiquorJson).then((bool success) {
+        _liquorJson = json.encode(liquorList);
+        prefs.setString(liquor.type, _liquorJson).then((bool success) {
           _submittedValidation = "SUBMITTED!";
-          print("liquor json was null $_submittedLiquorJson");
+          print("liquor json was null $_liquorJson");
         });
       });
     } else {
-      var data = json.decode(liquorJson);
+      var data = json.decode(_liquorJson);
       setState(() {
         liquorList = (data as List).map((i) => new LiquorItem.fromJson(i)).toList();
         print("liquorlist is $liquorList");
@@ -82,11 +83,6 @@ class LiquorFormFieldState extends State<LiquorFormField> {
 
   }
 
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-        content: new Text(value)
-    ));
-  }
 
   bool _autovalidate = false;
   bool _formWasEdited = false;
@@ -97,9 +93,22 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   void _handleSubmitted() async {
     final FormState form = _formLiquorKey.currentState;
     form.save();
-    String _randomId = _random.nextInt(1000).toString();
+    String _randomId = _random.nextInt(10000).toString();
     print(_randomId);
 
+
+    if(_visible == false) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState((){
+        if(_liquorTypes != null)
+          _submittedLiquorTypes.addAll(_liquorTypes);
+        _submittedLiquorTypes.add(liquor.type);
+        print(_submittedLiquorTypes);
+        prefs.setStringList("liquorTypes", _submittedLiquorTypes);
+        _visible = true;
+      });
+      _getLiquorTypes();
+    }
     var formLiquorItem = new LiquorItem(
       id: _randomId,
       type: liquor.type,
@@ -149,23 +158,26 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   void _getLiquorTypes() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      liquorTypes = prefs.getStringList("liquorTypes");
-      print(liquorTypes);
-      dropDownFields = liquorTypes
-          .map((String value) {
-        return new DropdownMenuItem(
-          value: new Text(value),
-          child: new Text(value),
-        );
+      _liquorTypes = prefs.getStringList("liquorTypes");
+      print(_liquorTypes);
+      if(_liquorTypes != null) {
+        dropDownFields = _liquorTypes
+            .map((String value) {
+          return new DropdownMenuItem<String>(
+            value: value,
+            child: new Text(value),
+          );
+        }
+        ).toList();
       }
-      ).toList();
-
       dropDownFields.add(
-        new DropdownMenuItem(
-            value: new Text("Add New"),
+        new DropdownMenuItem<String>(
+            value: "addNew",
             child: new Text("Add New")
         )
+
       );
+
     });
 
   }
@@ -179,7 +191,6 @@ class LiquorFormFieldState extends State<LiquorFormField> {
     @override
     Widget build(BuildContext context) {
       return new Scaffold(
-        key: _scaffoldKey,
         appBar: new PreferredSize(child: new GradientAppBar("ADD LIQUOR"), preferredSize: const Size.fromHeight(48.0)),
         body: new SafeArea(
           top: false,
@@ -193,38 +204,43 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                 child: new Column(
                   children: <Widget>[
                     new TextFormField(
-                      initialValue: "Clase Azul",
                       decoration: const InputDecoration(
                         hintText: 'Name of Liquor',
                         labelText: 'Name *',
                       ),
                       onSaved: (String value) { liquor.name = value; },
                     ),
-                    new DropdownButton(
-                      items: dropDownFields,
-                      hint: new Text("Select a current type or add a new one"),
-                      onChanged: (String value){
-                        setState((){
-                          if(value == "Add New") {
-                            _visible = true;
-                          }
-                          else{
-                            _visible = false;
-                            _textController.text = value;
-                          }
-                        });
-                      },
-                    ),
-                    _visible ? new Container(
-                        child: new TextFormField(
-                          controller: _textController,
-                          decoration: const InputDecoration(
-                            hintText: 'What style of liquor is it?',
-                            labelText: 'Type',
-                          ),
-                          onSaved: (String value) { liquor.type = value.toLowerCase(); },
-                        )
-                    ): new Container(),
+                    new AnimatedCrossFade(
+                        firstChild: new DropdownButton(
+                          value:dropDownValue,
+                          items: dropDownFields,
+                          hint: new Text("Select a current type or add a new one"),
+                          onChanged: (String value){
+                            setState((){
+                              if(value == "addNew") {
+                                _visible = false;
+                              }
+                              else{
+                                dropDownValue = value;
+                                _textController.text = value.toLowerCase();
+                                _visible = true;
+                                print(value);
+                              }
+                            });
+                          },
+                        ),
+                        secondChild: new Container(
+                            child: new TextFormField(
+                              controller: _textController,
+                              decoration: const InputDecoration(
+                                hintText: 'What style of liquor is it?',
+                                labelText: 'Type',
+                              ),
+                              onSaved: (String value) { liquor.type = value.toLowerCase(); },
+                            )
+                        ),
+                        crossFadeState: _visible ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                        duration: const Duration(seconds: 2)),
                     new TextFormField(
                       initialValue: "Clase Azul",
                       decoration: const InputDecoration(
@@ -357,6 +373,6 @@ class LiquorFormFieldState extends State<LiquorFormField> {
       );
     }
   }
-}
+
 
 
