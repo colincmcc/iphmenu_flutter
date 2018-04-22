@@ -7,6 +7,7 @@ import 'package:fluro/fluro.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:iphmenu/features/common/sortable_sliver_listview.dart';
 import 'package:iphmenu/routes/application.dart';
 import 'package:iphmenu/features/common/AppBars.dart';
 import 'package:iphmenu/Theme.dart' as Theme;
@@ -26,10 +27,10 @@ class HomePageLiquorState extends State<HomePageLiquor>{
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
   List<String> _liquorTypes = [];
-    int _isLoading = 1;
-    List<Widget> menuWidgets;
+  int _isLoading = 1;
+  List<Widget> menuWidgets;
 
-    Future<Null> _handleRefresh() {
+  Future<Null> _handleRefresh() {
     final Completer<Null> completer = new Completer<Null>();
     new Timer(const Duration(seconds: 3), () { completer.complete(null); });
     return completer.future.then((_) {
@@ -49,9 +50,11 @@ class HomePageLiquorState extends State<HomePageLiquor>{
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      _liquorTypes = prefs.getStringList("liquorTypes");
+      _liquorTypes.clear();
+      _liquorTypes.addAll(prefs.getStringList("liquorTypes"));
       print(_liquorTypes);
       if(_liquorTypes != null) {
+        // Create menu buttons from the stored liquor types
         menuWidgets = _liquorTypes.map((String _liquor) =>
             menuButton(context, _liquor.toUpperCase(), _liquor)
         ).toList();
@@ -91,7 +94,7 @@ class HomePageLiquorState extends State<HomePageLiquor>{
                   sliver: new SliverToBoxAdapter(
                     child: new Column(
                       children: menuWidgets,
-                    ),
+                    )
                   )
               )
           );
@@ -107,8 +110,33 @@ class HomePageLiquorState extends State<HomePageLiquor>{
         key: _scaffoldKey,
         backgroundColor: Theme.Colors.appBarGradientStart,
         body: new RefreshIndicator(
+            key: _refreshIndicatorKey,
+            child: new CustomScrollView(
+              shrinkWrap: true,
+              slivers: <Widget>[
+                new AnimatedAppBar(context, "IPH EXECUTIVE"),
+                new SortableListView(
+                    itemBuilder: (_, int index) => new Container(color:Theme.Colors.appBarGradientStart ,child: menuButton(context, _liquorTypes[index].toUpperCase(), _liquorTypes[index]),),
+                    items: _liquorTypes,
+                    prototype: menuButton(context, "", "")
+                ),
+              ],
+            ),
+            onRefresh: _handleRefresh
+        )
+    );
+    /*
+    new SortableListView(
+              itemBuilder: (_, int index) => new Container(color:Theme.Colors.appBarGradientStart ,child: menuButton(context, _liquorTypes[index].toUpperCase(), _liquorTypes[index]),),
+              items: _liquorTypes,
+            ),
+     Widget home = new Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Theme.Colors.appBarGradientStart,
+        body: new RefreshIndicator(
           key: _refreshIndicatorKey,
             child: new CustomScrollView(
+              shrinkWrap: true,
               slivers: <Widget>[
                 new AnimatedAppBar(context, "IPH EXECUTIVE"),
                 _getHomeContent()
@@ -116,22 +144,18 @@ class HomePageLiquorState extends State<HomePageLiquor>{
             ),
             onRefresh: _handleRefresh)
 
-    );
-    /*
-    Widget home = new Scaffold(
-      key: _scaffoldKey,
-        backgroundColor: Theme.Colors.appBarGradientStart,
-        body: new CustomScrollView(
-            slivers: <Widget>[
-              new AnimatedAppBar(context, "IPH EXECUTIVE"),
-              _getHomeContent()
-            ],
-        )
     ); */
     return home;
   }
 
-
+  Widget dragMenuButton(BuildContext context, String title, String key, int index){
+    return new LongPressDraggable(
+        child: new DragTarget(
+            builder: null
+        ),
+        feedback: null
+    );
+  }
   // helpers
   Widget menuButton(BuildContext context, String title, String key) {
 
@@ -188,9 +212,8 @@ class HomePageLiquorState extends State<HomePageLiquor>{
     );
 
 
-
     return new Padding(
-      padding: new EdgeInsets.all(4.0),
+      padding: new EdgeInsets.all(10.0),
       child: new ConstrainedBox(
         constraints: new BoxConstraints(minHeight: 42.0),
         child: new FlatButton(
@@ -207,7 +230,6 @@ class HomePageLiquorState extends State<HomePageLiquor>{
 
   // actions
   void tappedMenuButton(BuildContext context, String key) {
-    String type = "";
     String result;
     TransitionType transitionType = TransitionType.native;
 
@@ -229,6 +251,8 @@ class HomePageLiquorState extends State<HomePageLiquor>{
       Application.router.navigateTo(context, "/function?result=$result");
     }
   }
+
+
 
 
 }
