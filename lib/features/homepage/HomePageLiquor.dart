@@ -67,10 +67,12 @@ class HomePageLiquorState extends State<HomePageLiquor>{
 
     setState(() {
       _isAdmin = prefs.getBool("isAdmin") ?? false;
+      var _storedTypes = prefs.getStringList("liquorTypes");
       _liquorTypes.clear();
-      _liquorTypes.addAll(prefs.getStringList("liquorTypes"));
       print("_get liquor $_liquorTypes");
-      if(_liquorTypes != null) {
+      if(_storedTypes != null) {
+        _liquorTypes.addAll(_storedTypes);
+
         if(_isAdmin){
           _isLoading = 2;
           print("isloading 2, is admin & not null");
@@ -133,8 +135,16 @@ class HomePageLiquorState extends State<HomePageLiquor>{
              ),
            );
         case 4:
-          return new Center(
-            child: new Text("Please add menu items with the Add Liquor page!"),
+          return new SliverToBoxAdapter(
+            child: new Padding(
+              padding: EdgeInsets.only(top: 50.0),
+              child: new Container(
+                alignment: Alignment.center,
+                child: new Center(
+                  child: new Text("Please add menu items with the Add Liquor page!", style: Theme.TextStyles.appBarTitle),
+                ),
+              ),
+            )
           );
       }
     }

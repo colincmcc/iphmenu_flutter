@@ -45,7 +45,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   final Random _random = new Random();
   List<String> _liquorTypes = [];
   List<String> _submittedLiquorTypes =[];
-  List dropDownFields = [];
+  List<DropdownMenuItem<String>> dropDownFields = [];
   bool _visible = true;
   String dropDownValue;
 

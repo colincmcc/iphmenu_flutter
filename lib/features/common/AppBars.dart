@@ -113,7 +113,6 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
 
   void _loginPage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _
     if(_isAdmin){
       setState((){
         print("logging out");

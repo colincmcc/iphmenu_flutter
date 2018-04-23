@@ -14,10 +14,6 @@ var rootHandler = new Handler(handlerFunc: (BuildContext context, Map<String, Li
   return new HomePageLiquor();
 });
 
-var logoutHandler = new Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-  return new HomePageLiquor();
-});
-
 var liquorHandler = new Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
   String type = params["type"]?.first;
   return new LiquorList(type);
