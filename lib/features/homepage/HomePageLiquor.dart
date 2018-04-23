@@ -29,9 +29,7 @@ class HomePageLiquorState extends State<HomePageLiquor>{
   List<String> _liquorTypes = [];
   int _isLoading = 1;
   List<Widget> menuWidgets;
-  List<int> menuColors = [
-    0xFF98a799, 0xFFf2d367, 0xFF816e68, 0xFFd8e2ca, 0xFFde8e64, 0xFFddd4a6
-  ];
+
 
   Future<Null> _handleRefresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -108,27 +106,12 @@ class HomePageLiquorState extends State<HomePageLiquor>{
           }
         case 2:
           return new SortableListView(
-              itemBuilder: (_, int index) {
-                Color _bgColor = Color(menuColors[index]);
-                return new Container(
-                    color: _bgColor,
-                    child: new Container(
+              itemBuilder: (_, int index) => new Container(
+                        color: Theme.Colors.appBarGradientStart,
                         child: menuButton(
                             context, _liquorTypes[index].toUpperCase(),
                             _liquorTypes[index]),
-                        margin: EdgeInsets.only(bottom: 5.0),
-                        decoration: new BoxDecoration(
-                          boxShadow: <BoxShadow>[
-                            new BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 10.0,
-                            ),
-                          ],
-                        )
-                    )
-                );
-              }
-              ,
+                    ),
               items: _liquorTypes,
               prototype: menuButton(context, "", "")
           );
@@ -214,15 +197,28 @@ class HomePageLiquorState extends State<HomePageLiquor>{
     final homeContent = new Container(
       child: homeCardContent,
       height:  75.0 ,
-      margin: new EdgeInsets.only(left: 46.0),
-
+      margin:
+      new EdgeInsets.only(left: 46.0),
+      decoration: new BoxDecoration(
+        color: Theme.Colors.appBarGradientEnd,
+        shape: BoxShape.rectangle,
+        borderRadius: new BorderRadius.circular(8.0),
+        boxShadow: <BoxShadow>[
+          new BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10.0,
+            offset: new Offset(0.0, 10.0),
+          ),
+        ],
+      ),
     );
 
 
-    return new ConstrainedBox(
+    return new Padding(
+      padding: new EdgeInsets.all(10.0),
+      child: new ConstrainedBox(
         constraints: new BoxConstraints(minHeight: 42.0),
         child: new FlatButton(
-          color: new Color(0xFFf2d367),
           highlightColor: const Color(0x11FFFFFF),
           splashColor: const Color(0x22FFFFFF),
           child: homeContent,
@@ -230,7 +226,7 @@ class HomePageLiquorState extends State<HomePageLiquor>{
             tappedMenuButton(context, key);
           },
         ),
-
+      ),
     );
   }
 

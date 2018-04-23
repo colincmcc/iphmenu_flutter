@@ -8,7 +8,7 @@ import 'package:iphmenu/Theme.dart' as Theme;
 
 
 final String _kSmallLogoImage = 'assets/img/lightbulb_solo.png';
-final double _kAppBarHeight = 150.0;
+final double _kAppBarHeight = 175.0;
 
 
 class GradientAppBar extends StatelessWidget {
@@ -251,7 +251,7 @@ class PageLogo extends StatefulWidget{
 }
 
 class _PageLogoState extends State<PageLogo> {
-  static const double kLogoHeight = 190.0;
+  static const double kLogoHeight = 200.0;
   static const double kLogoWidth = 300.0;
   static const double kImageHeight = 120.0;
   static const double kTextHeight = 120.0;
