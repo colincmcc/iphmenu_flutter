@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SortableListView extends StatefulWidget {
   final List items;
@@ -143,7 +144,9 @@ class SortableListViewState extends State<SortableListView> {
     );
   }
 */
-  void _handleAccept(int data, int index) {
+  void _handleAccept(int data, int index) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("sortable list before set ${widget.items}");
     setState(() {
       // Decrement index so that after removing we'll still insert the item
       // in the correct position.
@@ -153,6 +156,8 @@ class SortableListViewState extends State<SortableListView> {
       dynamic imageToMove = widget.items[data];
       widget.items.removeAt(data);
       widget.items.insert(index, imageToMove);
+      print("sortable list set ${widget.items}");
+      prefs.setStringList("liquorTypes", widget.items);
     });
   }
 

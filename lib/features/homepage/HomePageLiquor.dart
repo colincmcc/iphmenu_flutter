@@ -29,21 +29,38 @@ class HomePageLiquorState extends State<HomePageLiquor>{
   List<String> _liquorTypes = [];
   int _isLoading = 1;
   List<Widget> menuWidgets;
+  List<int> menuColors = [
+    0xFF98a799, 0xFFf2d367, 0xFF816e68, 0xFFd8e2ca, 0xFFde8e64, 0xFFddd4a6
+  ];
 
-  Future<Null> _handleRefresh() {
+  Future<Null> _handleRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     final Completer<Null> completer = new Completer<Null>();
     new Timer(const Duration(seconds: 3), () { completer.complete(null); });
+    int currentListLength = prefs.getStringList("liquorTypes").length;
     return completer.future.then((_) {
-      _getLiquorTypes();
-      _scaffoldKey.currentState?.showSnackBar(new SnackBar(
-          content: const Text('Liquor Updated!'),
-          action: new SnackBarAction(
-              label: 'RETRY',
-              onPressed: () {
-                _refreshIndicatorKey.currentState.show();
-              }
-          )
-      ));
+      if(currentListLength != _liquorTypes.length) {
+        _getLiquorTypes();
+        _scaffoldKey.currentState?.showSnackBar(new SnackBar(
+            content: const Text('Liquor Updated!'),
+            action: new SnackBarAction(
+                label: 'RETRY',
+                onPressed: () {
+                  _refreshIndicatorKey.currentState.show();
+                }
+            )
+        ));
+      } else {
+        _scaffoldKey.currentState?.showSnackBar(new SnackBar(
+            content: const Text('There were no changes.'),
+            action: new SnackBarAction(
+                label: 'RETRY',
+                onPressed: () {
+                  _refreshIndicatorKey.currentState.show();
+                }
+            )
+        ));
+      }
     });
   }
   _getLiquorTypes() async {
@@ -52,7 +69,7 @@ class HomePageLiquorState extends State<HomePageLiquor>{
     setState(() {
       _liquorTypes.clear();
       _liquorTypes.addAll(prefs.getStringList("liquorTypes"));
-      print(_liquorTypes);
+      print("_get liquor $_liquorTypes");
       if(_liquorTypes != null) {
         // Create menu buttons from the stored liquor types
         menuWidgets = _liquorTypes.map((String _liquor) =>
@@ -72,37 +89,52 @@ class HomePageLiquorState extends State<HomePageLiquor>{
   @override
   void initState() {
     super.initState();
-    _getLiquorTypes();
-
   }
 
   @override
   Widget build(BuildContext context) {
 
-    _getHomeContent(){
+    _getHomeContent() {
+
       switch (_isLoading) {
         case 1:
-          return new SliverToBoxAdapter(
+          {
+            _getLiquorTypes();
+            return new SliverToBoxAdapter(
               child: new Center(
                   child: new CircularProgressIndicator()
-              )
-          );
+              ),
+            );
+          }
         case 2:
-          return new Container(
-              child: new SliverPadding(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  sliver: new SliverToBoxAdapter(
-                    child: new Column(
-                      children: menuWidgets,
+          return new SortableListView(
+              itemBuilder: (_, int index) {
+                Color _bgColor = Color(menuColors[index]);
+                return new Container(
+                    color: _bgColor,
+                    child: new Container(
+                        child: menuButton(
+                            context, _liquorTypes[index].toUpperCase(),
+                            _liquorTypes[index]),
+                        margin: EdgeInsets.only(bottom: 5.0),
+                        decoration: new BoxDecoration(
+                          boxShadow: <BoxShadow>[
+                            new BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 10.0,
+                            ),
+                          ],
+                        )
                     )
-                  )
-              )
+                );
+              }
+              ,
+              items: _liquorTypes,
+              prototype: menuButton(context, "", "")
           );
         case 3:
-          return new SliverToBoxAdapter(
-            child: new Center(
+           return new Center(
               child: new Text("Please add menu items with the Add Liquor page!"),
-            ),
           );
       }
     }
@@ -112,14 +144,9 @@ class HomePageLiquorState extends State<HomePageLiquor>{
         body: new RefreshIndicator(
             key: _refreshIndicatorKey,
             child: new CustomScrollView(
-              shrinkWrap: true,
               slivers: <Widget>[
                 new AnimatedAppBar(context, "IPH EXECUTIVE"),
-                new SortableListView(
-                    itemBuilder: (_, int index) => new Container(color:Theme.Colors.appBarGradientStart ,child: menuButton(context, _liquorTypes[index].toUpperCase(), _liquorTypes[index]),),
-                    items: _liquorTypes,
-                    prototype: menuButton(context, "", "")
-                ),
+                _getHomeContent(),
               ],
             ),
             onRefresh: _handleRefresh
@@ -148,14 +175,6 @@ class HomePageLiquorState extends State<HomePageLiquor>{
     return home;
   }
 
-  Widget dragMenuButton(BuildContext context, String title, String key, int index){
-    return new LongPressDraggable(
-        child: new DragTarget(
-            builder: null
-        ),
-        feedback: null
-    );
-  }
   // helpers
   Widget menuButton(BuildContext context, String title, String key) {
 
@@ -195,28 +214,15 @@ class HomePageLiquorState extends State<HomePageLiquor>{
     final homeContent = new Container(
       child: homeCardContent,
       height:  75.0 ,
-      margin:
-      new EdgeInsets.only(left: 46.0),
-      decoration: new BoxDecoration(
-        color: Theme.Colors.appBarGradientEnd,
-        shape: BoxShape.rectangle,
-        borderRadius: new BorderRadius.circular(8.0),
-        boxShadow: <BoxShadow>[
-          new BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10.0,
-            offset: new Offset(0.0, 10.0),
-          ),
-        ],
-      ),
+      margin: new EdgeInsets.only(left: 46.0),
+
     );
 
 
-    return new Padding(
-      padding: new EdgeInsets.all(10.0),
-      child: new ConstrainedBox(
+    return new ConstrainedBox(
         constraints: new BoxConstraints(minHeight: 42.0),
         child: new FlatButton(
+          color: new Color(0xFFf2d367),
           highlightColor: const Color(0x11FFFFFF),
           splashColor: const Color(0x22FFFFFF),
           child: homeContent,
@@ -224,7 +230,7 @@ class HomePageLiquorState extends State<HomePageLiquor>{
             tappedMenuButton(context, key);
           },
         ),
-      ),
+
     );
   }
 

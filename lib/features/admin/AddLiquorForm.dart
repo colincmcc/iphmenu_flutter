@@ -87,7 +87,6 @@ class LiquorFormFieldState extends State<LiquorFormField> {
   bool _autovalidate = false;
   bool _formWasEdited = false;
   final GlobalKey<FormState> _formLiquorKey = new GlobalKey<FormState>();
-  final GlobalKey<FormFieldState<String>> _passwordFieldKey = new GlobalKey<FormFieldState<String>>();
 
 
   void _handleSubmitted() async {
@@ -240,7 +239,7 @@ class LiquorFormFieldState extends State<LiquorFormField> {
                             )
                         ),
                         crossFadeState: _visible ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                        duration: const Duration(seconds: 2)),
+                        duration: const Duration(seconds: 1)),
                     new TextFormField(
                       initialValue: "Clase Azul",
                       decoration: const InputDecoration(
