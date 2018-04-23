@@ -77,10 +77,11 @@ enum AppbarAction {
 }
 
 class AnimatedAppBar extends StatefulWidget{
-  AnimatedAppBar(this.context, this.pageTitle);
+  AnimatedAppBar(this.context, this.pageTitle, this.parentKey);
 
   final BuildContext context;
   final String pageTitle;
+  final GlobalKey parentKey;
 
   AnimatedAppBarState createState() => new AnimatedAppBarState();
 }
@@ -110,16 +111,16 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
     }
   }
 
-
   void _loginPage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    _
     if(_isAdmin){
       setState((){
         print("logging out");
         _isAdmin = false;
         prefs.setBool("isAdmin", false);
         _loginStatus = "Login";
+        widget.parentKey.currentState.reassemble();
       });
 
     }
@@ -143,6 +144,7 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
       if(_isSetup && _isAdmin){
         _loginStatus = "Logout";
         print("logout");
+        widget.parentKey.currentState.reassemble();
       }
       else if(_isSetup && _isAdmin == false){
         _loginStatus = "Login";
@@ -173,6 +175,7 @@ class AnimatedAppBarState extends State<AnimatedAppBar>{
         .top;
     return new SliverAppBar(
       //backgroundColor: Theme.Colors.appBarGradientEnd,
+      elevation: 16.0,
       pinned: true,
       expandedHeight: _kAppBarHeight,
       actions: <Widget>[
